@@ -398,52 +398,63 @@ export const themes: Record<string, Theme> = {
 export const defaultTheme = 'grey-silver';
 
 export function applyTheme(theme: Theme): void {
-  const root = document.documentElement;
+  if (typeof document === 'undefined') return;
   
-  // Colors
-  root.style.setProperty('--color-base', theme.colors.base);
-  root.style.setProperty('--color-layer1', theme.colors.layer1);
-  root.style.setProperty('--color-layer2', theme.colors.layer2);
-  root.style.setProperty('--color-layer3', theme.colors.layer3);
-  root.style.setProperty('--color-layer4', theme.colors.layer4);
-  root.style.setProperty('--color-surface', theme.colors.surface);
-  root.style.setProperty('--color-surface-hover', theme.colors.surfaceHover);
-  root.style.setProperty('--color-surface-active', theme.colors.surfaceActive);
-  root.style.setProperty('--color-border', theme.colors.border);
-  root.style.setProperty('--color-border-subtle', theme.colors.borderSubtle);
-  root.style.setProperty('--color-border-strong', theme.colors.borderStrong);
-  root.style.setProperty('--color-text', theme.colors.text);
-  root.style.setProperty('--color-text-muted', theme.colors.textMuted);
-  root.style.setProperty('--color-text-subtle', theme.colors.textSubtle);
-  root.style.setProperty('--color-accent', theme.colors.accent);
-  root.style.setProperty('--color-accent-muted', theme.colors.accentMuted);
-  root.style.setProperty('--color-accent-hover', theme.colors.accentHover);
-  root.style.setProperty('--color-success', theme.colors.success);
-  root.style.setProperty('--color-warning', theme.colors.warning);
-  root.style.setProperty('--color-error', theme.colors.error);
-  root.style.setProperty('--color-info', theme.colors.info);
+  const root = document.documentElement;
+  const body = document.body;
+  
+  // Set CSS custom properties on :root
+  const cssVars: Record<string, string> = {
+    '--color-base': theme.colors.base,
+    '--color-layer1': theme.colors.layer1,
+    '--color-layer2': theme.colors.layer2,
+    '--color-layer3': theme.colors.layer3,
+    '--color-layer4': theme.colors.layer4,
+    '--color-surface': theme.colors.surface,
+    '--color-surface-hover': theme.colors.surfaceHover,
+    '--color-surface-active': theme.colors.surfaceActive,
+    '--color-border': theme.colors.border,
+    '--color-border-subtle': theme.colors.borderSubtle,
+    '--color-border-strong': theme.colors.borderStrong,
+    '--color-text': theme.colors.text,
+    '--color-text-muted': theme.colors.textMuted,
+    '--color-text-subtle': theme.colors.textSubtle,
+    '--color-accent': theme.colors.accent,
+    '--color-accent-muted': theme.colors.accentMuted,
+    '--color-accent-hover': theme.colors.accentHover,
+    '--color-success': theme.colors.success,
+    '--color-warning': theme.colors.warning,
+    '--color-error': theme.colors.error,
+    '--color-info': theme.colors.info,
+    '--font-sans': theme.fonts.sans,
+    '--font-mono': theme.fonts.mono,
+    '--radius-sm': theme.radius.sm,
+    '--radius-md': theme.radius.md,
+    '--radius-lg': theme.radius.lg,
+    '--radius-xl': theme.radius.xl,
+    '--shadow-sm': theme.shadows.sm,
+    '--shadow-md': theme.shadows.md,
+    '--shadow-lg': theme.shadows.lg,
+    '--shadow-glow': theme.shadows.glow,
+  };
   
   if (theme.colors.gradient) {
-    root.style.setProperty('--color-gradient', theme.colors.gradient);
+    cssVars['--color-gradient'] = theme.colors.gradient;
   }
   if (theme.colors.glow) {
-    root.style.setProperty('--color-glow', theme.colors.glow);
+    cssVars['--color-glow'] = theme.colors.glow;
   }
   
-  // Fonts
-  root.style.setProperty('--font-sans', theme.fonts.sans);
-  root.style.setProperty('--font-mono', theme.fonts.mono);
+  // Apply all CSS variables
+  Object.entries(cssVars).forEach(([key, value]) => {
+    root.style.setProperty(key, value);
+  });
   
-  // Radius
-  root.style.setProperty('--radius-sm', theme.radius.sm);
-  root.style.setProperty('--radius-md', theme.radius.md);
-  root.style.setProperty('--radius-lg', theme.radius.lg);
-  root.style.setProperty('--radius-xl', theme.radius.xl);
+  // Also directly set body background for immediate visual change
+  body.style.backgroundColor = theme.colors.base;
+  body.style.color = theme.colors.text;
   
-  // Shadows
-  root.style.setProperty('--shadow-sm', theme.shadows.sm);
-  root.style.setProperty('--shadow-md', theme.shadows.md);
-  root.style.setProperty('--shadow-lg', theme.shadows.lg);
-  root.style.setProperty('--shadow-glow', theme.shadows.glow);
+  // Store theme ID as data attribute for debugging
+  root.setAttribute('data-theme', theme.id);
 }
 

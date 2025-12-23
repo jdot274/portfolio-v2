@@ -17,10 +17,13 @@ export const useThemeStore = create<ThemeState>()(
       setTheme: (themeId: string) => {
         const theme = themes[themeId];
         if (theme) {
-          set({ currentTheme: themeId });
+          console.log('Store: setTheme called with:', themeId);
+          // Apply theme immediately
           if (typeof window !== 'undefined') {
             applyTheme(theme);
           }
+          // Then update state
+          set({ currentTheme: themeId });
         }
       },
       
@@ -35,13 +38,16 @@ export const useThemeStore = create<ThemeState>()(
     {
       name: 'portfolio-v2-theme',
       onRehydrateStorage: () => (state) => {
-        // Apply theme on page load
+        // Apply theme on rehydration (page load)
         if (state && typeof window !== 'undefined') {
+          console.log('Store: Rehydrating with theme:', state.currentTheme);
           const theme = themes[state.currentTheme] || themes[defaultTheme];
-          applyTheme(theme);
+          // Delay slightly to ensure DOM is ready
+          setTimeout(() => {
+            applyTheme(theme);
+          }, 0);
         }
       },
     }
   )
 );
-
