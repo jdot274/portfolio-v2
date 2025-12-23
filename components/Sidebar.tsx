@@ -122,19 +122,21 @@ export default function Sidebar({ viewMode, onViewModeChange }: SidebarProps) {
                 transition={{ duration: 0.2 }}
                 className="overflow-hidden"
               >
-                <div className="py-1 space-y-0.5">
+                <div className="py-1 space-y-1.5">
                   {folders.map((folder) => {
                     const isActive = activeFilter.folder === folder.id || (folder.id === 'all' && !activeFilter.folder);
                     return (
                       <button
                         key={folder.id}
                         onClick={() => setActiveFilter({ type: folder.types?.[0], folder: folder.id })}
-                        className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm transition-all duration-150"
+                        className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm transition-all duration-200"
                         style={{
-                          background: isActive ? 'rgba(255,255,255,0.06)' : 'transparent',
-                          border: isActive ? '1px solid rgba(255,255,255,0.08)' : '1px solid transparent',
+                          background: isActive ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.02)',
+                          border: '1px solid ' + (isActive ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.06)'),
                           color: isActive ? 'var(--color-text)' : 'var(--color-text-secondary)',
-                          boxShadow: isActive ? 'inset 0 1px 0 rgba(255,255,255,0.04)' : 'none'
+                          boxShadow: isActive 
+                            ? '0 2px 8px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.08)' 
+                            : '0 1px 4px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.04)'
                         }}
                       >
                         <span className="text-base">{folder.icon}</span>

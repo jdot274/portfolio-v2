@@ -178,11 +178,8 @@ function DashboardView({ items, onRefresh }: { items: ContentItem[]; onRefresh: 
       </div>
 
       {/* Recent */}
-      <div className="glass-panel overflow-hidden">
-        <div 
-          className="flex items-center justify-between px-5 py-4"
-          style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
-        >
+      <div>
+        <div className="flex items-center justify-between mb-4">
           <h3 className="text-sm font-medium" style={{ color: 'var(--color-text)' }}>
             Recent Activity
           </h3>
@@ -190,29 +187,24 @@ function DashboardView({ items, onRefresh }: { items: ContentItem[]; onRefresh: 
             {recentItems.length} items
           </span>
         </div>
-        <div>
+        <div className="space-y-3">
           {recentItems.map((item, i) => (
             <motion.a
               key={item.id}
               href={item.url}
               target="_blank"
               rel="noopener noreferrer"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: i * 0.03 }}
-              className="flex items-center gap-4 px-5 py-3.5 transition-all duration-150"
-              style={{ 
-                borderBottom: i < recentItems.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none',
-                color: 'var(--color-text)'
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.03)'}
-              onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.05 }}
+              className="glass-card flex items-center gap-4 p-4 block"
+              style={{ color: 'var(--color-text)' }}
             >
-              <span className="text-lg">{getContentTypeIcon(item.type)}</span>
+              <span className="text-xl">{getContentTypeIcon(item.type)}</span>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium truncate">{item.title}</p>
                 {item.description && (
-                  <p className="text-xs truncate mt-0.5" style={{ color: 'var(--color-text-muted)' }}>
+                  <p className="text-xs truncate mt-1" style={{ color: 'var(--color-text-muted)' }}>
                     {item.description}
                   </p>
                 )}
@@ -267,23 +259,18 @@ function GridView({ items }: { items: ContentItem[] }) {
 
 function ListView({ items }: { items: ContentItem[] }) {
   return (
-    <div className="glass-panel overflow-hidden">
+    <div className="space-y-2">
       {items.map((item, i) => (
         <motion.a
           key={item.id}
           href={item.url}
           target="_blank"
           rel="noopener noreferrer"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: i * 0.01 }}
-          className="flex items-center gap-4 px-5 py-3.5 transition-all duration-150"
-          style={{ 
-            borderBottom: i < items.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none',
-            color: 'var(--color-text)'
-          }}
-          onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.03)'}
-          onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+          initial={{ opacity: 0, y: 4 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: i * 0.02 }}
+          className="glass-card flex items-center gap-4 px-5 py-3.5 block"
+          style={{ color: 'var(--color-text)' }}
         >
           <span className="text-lg">{getContentTypeIcon(item.type)}</span>
           <div className="flex-1 min-w-0">
@@ -291,10 +278,10 @@ function ListView({ items }: { items: ContentItem[] }) {
           </div>
           {item.github?.language && (
             <span 
-              className="text-xs px-2.5 py-1 rounded-md"
+              className="text-xs px-2.5 py-1 rounded-lg"
               style={{ 
-                background: 'rgba(255,255,255,0.05)',
-                border: '1px solid rgba(255,255,255,0.08)',
+                background: 'rgba(255,255,255,0.06)',
+                border: '1px solid rgba(255,255,255,0.1)',
                 color: 'var(--color-text-muted)'
               }}
             >
