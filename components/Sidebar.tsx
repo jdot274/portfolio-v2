@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useContentStore } from '@/stores/content-store';
 import { ContentType } from '@/types';
@@ -44,49 +44,45 @@ export default function Sidebar({ viewMode, onViewModeChange }: SidebarProps) {
   ];
 
   return (
-    <aside className="glass-sidebar w-64 h-full flex flex-col">
+    <aside className="glass-sidebar w-72 h-full flex flex-col">
       {/* Logo */}
-      <div className="p-5 pb-4">
-        <div className="flex items-center gap-3">
+      <div className="p-6 pb-5">
+        <div className="flex items-center gap-4">
           <div 
-            className="w-8 h-8 rounded-lg flex items-center justify-center"
-            style={{ 
-              background: 'linear-gradient(135deg, var(--color-accent), #6366f1)',
-              boxShadow: '0 0 20px var(--color-accent-glow)'
-            }}
+            className="w-10 h-10 rounded-xl flex items-center justify-center button-primary"
           >
-            <span className="text-white text-sm font-semibold">P</span>
+            <span className="text-white text-lg font-bold">P</span>
           </div>
           <div>
-            <h1 className="font-semibold text-sm" style={{ color: 'var(--color-text)' }}>
+            <h1 className="font-semibold text-[15px]" style={{ color: 'var(--color-text-primary)' }}>
               Portfolio
             </h1>
-            <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
+            <p className="text-xs font-medium" style={{ color: 'var(--color-text-ghost)' }}>
               Knowledge Hub
             </p>
           </div>
         </div>
       </div>
 
-      {/* View Mode */}
-      <div className="px-3 pb-3">
+      {/* View Mode Switcher */}
+      <div className="px-4 pb-4">
         <div 
-          className="p-1 rounded-xl flex gap-0.5"
+          className="p-1.5 rounded-xl flex gap-1"
           style={{ 
-            background: 'rgba(0,0,0,0.3)',
-            border: '1px solid rgba(255,255,255,0.06)'
+            background: 'rgba(0, 0, 0, 0.4)',
+            border: '1px solid var(--color-border)'
           }}
         >
           {views.map((view) => (
             <button
               key={view.id}
               onClick={() => onViewModeChange(view.id)}
-              className="flex-1 py-1.5 px-2 rounded-lg text-xs font-medium transition-all duration-200"
+              className="flex-1 py-2 px-2 rounded-lg text-xs font-medium transition-all duration-200"
               style={{
                 background: viewMode === view.id ? 'rgba(255,255,255,0.08)' : 'transparent',
-                color: viewMode === view.id ? 'var(--color-text)' : 'var(--color-text-muted)',
-                border: viewMode === view.id ? '1px solid rgba(255,255,255,0.1)' : '1px solid transparent',
-                boxShadow: viewMode === view.id ? 'inset 0 1px 0 rgba(255,255,255,0.05)' : 'none'
+                color: viewMode === view.id ? 'var(--color-text-primary)' : 'var(--color-text-ghost)',
+                border: viewMode === view.id ? '1px solid var(--color-border-glow)' : '1px solid transparent',
+                boxShadow: viewMode === view.id ? 'inset 0 1px 0 rgba(255,255,255,0.06)' : 'none'
               }}
             >
               {view.label}
@@ -95,22 +91,25 @@ export default function Sidebar({ viewMode, onViewModeChange }: SidebarProps) {
         </div>
       </div>
 
-      {/* Folders */}
-      <div className="flex-1 overflow-y-auto px-3">
-        <div className="py-2">
+      {/* Navigation */}
+      <div className="flex-1 overflow-y-auto px-4">
+        {/* Folders Section */}
+        <div className="py-3">
           <button
             onClick={() => toggleSection('folders')}
-            className="flex items-center justify-between w-full px-2 py-1 text-xs font-medium uppercase tracking-wider"
-            style={{ color: 'var(--color-text-muted)' }}
+            className="flex items-center justify-between w-full px-2 py-1.5 text-xs font-semibold uppercase tracking-wider"
+            style={{ color: 'var(--color-text-ghost)' }}
           >
             <span>Folders</span>
-            <svg 
-              className={`w-3 h-3 transition-transform duration-200 ${expandedSections.folders ? 'rotate-90' : ''}`}
+            <motion.svg 
+              className="w-3 h-3"
+              animate={{ rotate: expandedSections.folders ? 90 : 0 }}
+              transition={{ duration: 0.2 }}
               fill="currentColor" 
               viewBox="0 0 20 20"
             >
               <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-            </svg>
+            </motion.svg>
           </button>
           
           <AnimatePresence>
@@ -119,35 +118,22 @@ export default function Sidebar({ viewMode, onViewModeChange }: SidebarProps) {
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: 'auto', opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.2 }}
+                transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
                 className="overflow-hidden"
               >
-                <div className="py-1 space-y-1.5">
-                  {folders.map((folder) => {
+                <div className="py-2 space-y-2">
+                  {folders.map((folder, i) => {
                     const isActive = activeFilter.folder === folder.id || (folder.id === 'all' && !activeFilter.folder);
                     return (
-                      <button
+                      <SidebarItem
                         key={folder.id}
+                        icon={folder.icon}
+                        label={folder.name}
+                        count={getItemCount(folder.types)}
+                        isActive={isActive}
                         onClick={() => setActiveFilter({ type: folder.types?.[0], folder: folder.id })}
-                        className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm transition-all duration-200"
-                        style={{
-                          background: isActive ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.02)',
-                          border: '1px solid ' + (isActive ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.06)'),
-                          color: isActive ? 'var(--color-text)' : 'var(--color-text-secondary)',
-                          boxShadow: isActive 
-                            ? '0 2px 8px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.08)' 
-                            : '0 1px 4px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.04)'
-                        }}
-                      >
-                        <span className="text-base">{folder.icon}</span>
-                        <span className="flex-1 text-left">{folder.name}</span>
-                        <span 
-                          className="text-xs tabular-nums"
-                          style={{ color: 'var(--color-text-muted)' }}
-                        >
-                          {getItemCount(folder.types)}
-                        </span>
-                      </button>
+                        delay={i * 0.03}
+                      />
                     );
                   })}
                 </div>
@@ -156,25 +142,28 @@ export default function Sidebar({ viewMode, onViewModeChange }: SidebarProps) {
           </AnimatePresence>
         </div>
 
-        {/* Tags */}
-        <div className="py-2" style={{ borderTop: '1px solid var(--color-border-subtle)' }}>
+        {/* Tags Section */}
+        <div 
+          className="py-3"
+          style={{ borderTop: '1px solid var(--color-border)' }}
+        >
           <button
             onClick={() => toggleSection('tags')}
-            className="flex items-center justify-between w-full px-2 py-1 text-xs font-medium uppercase tracking-wider"
-            style={{ color: 'var(--color-text-muted)' }}
+            className="flex items-center justify-between w-full px-2 py-1.5 text-xs font-semibold uppercase tracking-wider"
+            style={{ color: 'var(--color-text-ghost)' }}
           >
             <span>Tags</span>
             <div className="flex items-center gap-2">
-              <span className="text-xs" style={{ color: 'var(--color-text-subtle)' }}>
-                {allTags.length}
-              </span>
-              <svg 
-                className={`w-3 h-3 transition-transform duration-200 ${expandedSections.tags ? 'rotate-90' : ''}`}
+              <span style={{ color: 'var(--color-text-ghost)' }}>{allTags.length}</span>
+              <motion.svg 
+                className="w-3 h-3"
+                animate={{ rotate: expandedSections.tags ? 90 : 0 }}
+                transition={{ duration: 0.2 }}
                 fill="currentColor" 
                 viewBox="0 0 20 20"
               >
                 <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-              </svg>
+              </motion.svg>
             </div>
           </button>
           
@@ -184,19 +173,19 @@ export default function Sidebar({ viewMode, onViewModeChange }: SidebarProps) {
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: 'auto', opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.2 }}
+                transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
                 className="overflow-hidden"
               >
-                <div className="py-2 flex flex-wrap gap-1.5">
+                <div className="py-3 flex flex-wrap gap-2">
                   {allTags.slice(0, 12).map((tag) => (
                     <button
                       key={tag.id}
                       onClick={() => setActiveFilter({ tags: [tag.id] })}
-                      className="text-xs px-2.5 py-1 rounded-lg transition-all duration-150 hover:bg-[rgba(255,255,255,0.08)]"
+                      className="text-xs px-3 py-1.5 rounded-lg transition-all duration-200"
                       style={{
                         background: 'rgba(255,255,255,0.04)',
-                        color: 'var(--color-text-secondary)',
-                        border: '1px solid rgba(255,255,255,0.08)'
+                        border: '1px solid var(--color-border)',
+                        color: 'var(--color-text-tertiary)'
                       }}
                     >
                       {tag.name}
@@ -211,11 +200,10 @@ export default function Sidebar({ viewMode, onViewModeChange }: SidebarProps) {
 
       {/* Footer */}
       <div 
-        className="p-3"
-        style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}
+        className="p-4"
+        style={{ borderTop: '1px solid var(--color-border)' }}
       >
-        <button 
-          className="glass-button w-full flex items-center gap-2 px-3 py-2.5 text-sm"
+        <button className="glass-button w-full flex items-center gap-3 px-4 py-3 text-sm font-medium"
           style={{ color: 'var(--color-text-secondary)' }}
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -226,5 +214,64 @@ export default function Sidebar({ viewMode, onViewModeChange }: SidebarProps) {
         </button>
       </div>
     </aside>
+  );
+}
+
+// Sidebar Item with spotlight effect
+function SidebarItem({ 
+  icon, 
+  label, 
+  count, 
+  isActive, 
+  onClick,
+  delay = 0
+}: { 
+  icon: string; 
+  label: string; 
+  count: number; 
+  isActive: boolean; 
+  onClick: () => void;
+  delay?: number;
+}) {
+  const itemRef = useRef<HTMLButtonElement>(null);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (!itemRef.current) return;
+    const rect = itemRef.current.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    itemRef.current.style.setProperty('--mouse-x', `${x}%`);
+    itemRef.current.style.setProperty('--mouse-y', `${y}%`);
+  };
+
+  return (
+    <motion.button
+      ref={itemRef}
+      initial={{ opacity: 0, x: -8 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ delay, duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+      onClick={onClick}
+      onMouseMove={handleMouseMove}
+      className="glass-card w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-left"
+      style={{
+        background: isActive 
+          ? 'linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04))'
+          : 'linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01))',
+        borderColor: isActive ? 'var(--color-border-bright)' : 'var(--color-border)',
+        color: isActive ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
+      }}
+    >
+      <span className="text-lg icon-shimmer">{icon}</span>
+      <span className="flex-1">{label}</span>
+      <span 
+        className="text-xs font-semibold tabular-nums px-2 py-0.5 rounded-md"
+        style={{ 
+          background: 'rgba(255,255,255,0.06)',
+          color: 'var(--color-text-ghost)'
+        }}
+      >
+        {count}
+      </span>
+    </motion.button>
   );
 }
