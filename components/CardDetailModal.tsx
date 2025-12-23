@@ -58,8 +58,8 @@ export default function CardDetailModal({ item, isOpen, onClose }: CardDetailMod
   if (!isOpen || !item) return null;
 
   const handleSave = () => {
-    const completedTasks = checklists.reduce((acc, cl) => acc + cl.items.filter(i => i.completed).length, 0);
-    const totalTasks = checklists.reduce((acc, cl) => acc + cl.items.length, 0);
+    const completedTasks = checklists.reduce((acc, checklist) => acc + checklist.items.filter(checklistItem => checklistItem.completed).length, 0);
+    const totalTasks = checklists.reduce((acc, checklist) => acc + checklist.items.length, 0);
     const progress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : undefined;
 
     updateItem(item.id, {
@@ -97,27 +97,27 @@ export default function CardDetailModal({ item, isOpen, onClose }: CardDetailMod
   };
 
   const addChecklistItem = (checklistId: string, text: string) => {
-    setChecklists(checklists.map(cl => 
-      cl.id === checklistId 
-        ? { ...cl, items: [...cl.items, { id: `item-${Date.now()}`, text, completed: false }] }
-        : cl
+    setChecklists(checklists.map(checklist => 
+      checklist.id === checklistId 
+        ? { ...checklist, items: [...checklist.items, { id: `item-${Date.now()}`, text, completed: false }] }
+        : checklist
     ));
   };
 
   const toggleChecklistItem = (checklistId: string, itemId: string) => {
-    setChecklists(checklists.map(cl => 
-      cl.id === checklistId 
-        ? { ...cl, items: cl.items.map(i => i.id === itemId ? { ...i, completed: !i.completed } : i) }
-        : cl
+    setChecklists(checklists.map(checklist => 
+      checklist.id === checklistId 
+        ? { ...checklist, items: checklist.items.map(checklistItem => checklistItem.id === itemId ? { ...checklistItem, completed: !checklistItem.completed } : checklistItem) }
+        : checklist
     ));
   };
 
   const deleteChecklist = (checklistId: string) => {
-    setChecklists(checklists.filter(cl => cl.id !== checklistId));
+    setChecklists(checklists.filter(checklist => checklist.id !== checklistId));
   };
 
-  const completedTasks = checklists.reduce((acc, cl) => acc + cl.items.filter(i => i.completed).length, 0);
-  const totalTasks = checklists.reduce((acc, cl) => acc + cl.items.length, 0);
+  const completedTasks = checklists.reduce((acc, checklist) => acc + checklist.items.filter(checklistItem => checklistItem.completed).length, 0);
+  const totalTasks = checklists.reduce((acc, checklist) => acc + checklist.items.length, 0);
 
   return (
     <AnimatePresence>
@@ -321,7 +321,7 @@ export default function CardDetailModal({ item, isOpen, onClose }: CardDetailMod
                         <div
                           className="h-full bg-emerald-500 transition-all duration-300"
                           style={{ 
-                            width: `${(checklist.items.filter(i => i.completed).length / checklist.items.length) * 100}%` 
+                            width: `${(checklist.items.filter(checklistItem => checklistItem.completed).length / checklist.items.length) * 100}%` 
                           }}
                         />
                       </div>

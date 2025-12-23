@@ -24,19 +24,19 @@ export function StatsWidget() {
     },
     { 
       label: 'Repositories', 
-      value: items.filter(i => i.type === 'repo').length, 
+      value: items.filter(item => item.type === 'repo').length, 
       icon: <Github size={16} />,
       color: '#3b82f6',
     },
     { 
       label: 'Web Apps', 
-      value: items.filter(i => i.type === 'webapp' || i.type === 'website').length, 
+      value: items.filter(item => item.type === 'webapp' || item.type === 'website').length, 
       icon: <Globe size={16} />,
       color: '#8b5cf6',
     },
     { 
       label: 'Documents', 
-      value: items.filter(i => i.type === 'document' || i.type === 'markdown').length, 
+      value: items.filter(item => item.type === 'document' || item.type === 'markdown').length, 
       icon: <FileCode size={16} />,
       color: '#f97316',
     },
@@ -44,12 +44,12 @@ export function StatsWidget() {
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-      {stats.map((stat, i) => (
+      {stats.map((stat, statIndex) => (
         <motion.div
           key={stat.label}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: i * 0.05 }}
+          transition={{ delay: statIndex * 0.05 }}
           className="rounded-xl p-4"
           style={{ 
             backgroundColor: 'var(--color-surface)',
@@ -180,7 +180,7 @@ export function QuickActionsWidget({
 // Pinned Items Widget
 export function PinnedWidget({ onItemClick }: { onItemClick?: (item: ContentItem) => void }) {
   const { items, updateItem } = useContentStore();
-  const pinnedItems = items.filter(i => i.isPinned);
+  const pinnedItems = items.filter(item => item.isPinned);
 
   if (pinnedItems.length === 0) {
     return (
@@ -240,10 +240,10 @@ export function PinnedWidget({ onItemClick }: { onItemClick?: (item: ContentItem
 // GitHub Stats Widget
 export function GitHubStatsWidget() {
   const { items, githubUsername } = useContentStore();
-  const repos = items.filter(i => i.type === 'repo');
+  const repos = items.filter(item => item.type === 'repo');
   
-  const totalStars = repos.reduce((acc, r) => acc + (r.github?.stars || 0), 0);
-  const languages = new Set(repos.map(r => r.github?.language).filter(Boolean));
+  const totalStars = repos.reduce((acc, repo) => acc + (repo.github?.stars || 0), 0);
+  const languages = new Set(repos.map(repo => repo.github?.language).filter(Boolean));
   const topRepo = repos.sort((a, b) => (b.github?.stars || 0) - (a.github?.stars || 0))[0];
 
   return (
@@ -313,7 +313,7 @@ export function GitHubStatsWidget() {
 // Progress Widget (for board items)
 export function ProgressWidget() {
   const { items } = useContentStore();
-  const boardItems = items.filter(i => i.boardColumn);
+  const boardItems = items.filter(item => item.boardColumn);
 
   const columns = [
     { id: 'backlog', label: 'Backlog', color: '#6b7280' },
@@ -323,7 +323,7 @@ export function ProgressWidget() {
     { id: 'done', label: 'Done', color: '#22c55e' },
   ];
 
-  const getColumnCount = (id: string) => boardItems.filter(i => i.boardColumn === id).length;
+  const getColumnCount = (id: string) => boardItems.filter(item => item.boardColumn === id).length;
   const total = boardItems.length || 1;
 
   return (

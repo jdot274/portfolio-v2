@@ -117,7 +117,7 @@ export default function SearchBar() {
             style={{ backgroundColor: 'var(--color-accent-muted)', color: 'var(--color-accent)' }}
           >
             {getContentTypeIcon(activeFilter.type)}
-            {CONTENT_TYPES.find(t => t.type === activeFilter.type)?.label}
+            {CONTENT_TYPES.find(contentType => contentType.type === activeFilter.type)?.label}
             <button onClick={() => handleTypeFilter(undefined)} className="ml-1">
               <X size={12} />
             </button>
@@ -152,7 +152,7 @@ export default function SearchBar() {
                   📚 All ({items.length})
                 </button>
                 {CONTENT_TYPES.map(({ type, label }) => {
-                  const count = items.filter(i => i.type === type).length;
+                  const count = items.filter(item => item.type === type).length;
                   return (
                     <button
                       key={type}

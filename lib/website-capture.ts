@@ -152,8 +152,8 @@ export async function captureWebsite(url: string): Promise<{
     const pages = await extractRoutes(normalizedUrl);
     
     // Detect framework
-    const framework = techStack.find(t => 
-      ['Next.js', 'Nuxt', 'React', 'Vue', 'Angular', 'Svelte', 'Astro'].includes(t)
+    const framework = techStack.find(tech => 
+      ['Next.js', 'Nuxt', 'React', 'Vue', 'Angular', 'Svelte', 'Astro'].includes(tech)
     );
 
     const metadata: WebsiteMetadata = {
