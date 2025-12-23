@@ -43,8 +43,8 @@ export function ThemeSwitcher() {
             onClick={() => setIsOpen(false)}
           />
           
-          {/* Dropdown */}
-          <div className="absolute right-0 top-full mt-2 w-72 z-50
+          {/* Dropdown - opens upward since button is at bottom */}
+          <div className="absolute left-0 bottom-full mb-2 w-72 z-50
                           bg-[var(--color-layer1)] border border-[var(--color-border)]
                           rounded-xl shadow-lg overflow-hidden animate-fade-in">
             <div className="p-3 border-b border-[var(--color-border)]">
