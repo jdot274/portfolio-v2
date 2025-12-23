@@ -122,10 +122,10 @@ export function gistToContentItem(gist: GitHubGist): ContentItem {
   const files = Object.values(gist.files);
   const primaryFile = files[0];
   
-  const tags: Tag[] = files.map(f => ({
-    id: `gist-file-${f.filename}`,
-    name: f.language?.toLowerCase() || 'text',
-    color: getLanguageColor(f.language || 'text'),
+  const tags: Tag[] = files.map(file => ({
+    id: `gist-file-${file.filename}`,
+    name: file.language?.toLowerCase() || 'text',
+    color: getLanguageColor(file.language || 'text'),
     aiGenerated: false,
   })).slice(0, 3);
 
@@ -133,13 +133,13 @@ export function gistToContentItem(gist: GitHubGist): ContentItem {
     id: `gist-${gist.id}`,
     type: 'gist',
     title: gist.description || primaryFile?.filename || 'Untitled Gist',
-    description: `${files.length} file${files.length > 1 ? 's' : ''}: ${files.map(f => f.filename).join(', ')}`,
+    description: `${files.length} file${files.length > 1 ? 's' : ''}: ${files.map(file => file.filename).join(', ')}`,
     url: gist.html_url,
     storageLocation: 'github',
     storagePath: gist.id,
     tags,
     metadata: {
-      files: files.map(f => ({ name: f.filename, language: f.language, size: f.size })),
+      files: files.map(file => ({ name: file.filename, language: file.language, size: file.size })),
       public: gist.public,
     },
     createdAt: gist.created_at,

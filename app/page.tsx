@@ -7,7 +7,7 @@ import Link from 'next/link';
 // PORTFOLIO HOME - Clean Dark Gradient with Layered Glass Outlines
 // ═══════════════════════════════════════════════════════════════════════════
 
-const projects = [
+const portfolioProjects = [
   { id: 1, title: 'NexusForge', description: 'Universal runtime + context engine', tags: ['Tauri', 'Rust', 'React'], type: 'App' },
   { id: 2, title: 'SpatialAppStore', description: 'Glass-style storefront with orb glyphs', tags: ['SwiftUI', 'Metal'], type: 'App' },
   { id: 3, title: 'AgentOS Gallery', description: 'Multi-widget AAA dashboard', tags: ['Next.js', 'Framer'], type: 'Demo', href: '/gallery' },
@@ -16,7 +16,7 @@ const projects = [
   { id: 6, title: 'MCPManager', description: 'Model Context Protocol manager', tags: ['Rust', 'MCP'], type: 'Tool' },
 ];
 
-const stats = [
+const portfolioStats = [
   { value: '12', label: 'Projects' },
   { value: '6', label: 'Languages' },
   { value: '∞', label: 'Ideas' },
@@ -52,12 +52,12 @@ export default function Home() {
 
           {/* Stats Row */}
           <div className="flex gap-8">
-            {stats.map((stat, i) => (
+            {portfolioStats.map((stat, statIndex) => (
               <motion.div
                 key={stat.label}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 + i * 0.1 }}
+                transition={{ delay: 0.2 + statIndex * 0.1 }}
                 className="flex items-baseline gap-2"
               >
                 <span className="text-2xl font-bold text-white">{stat.value}</span>
@@ -72,24 +72,24 @@ export default function Home() {
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-lg font-semibold text-white/80">Projects</h2>
             <div className="flex gap-2">
-              {['All', 'App', 'Tool', 'Demo'].map((filter) => (
+              {['All', 'App', 'Tool', 'Demo'].map((filterType) => (
                 <button 
-                  key={filter}
+                  key={filterType}
                   className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${
-                    filter === 'All' 
+                    filterType === 'All' 
                       ? 'bg-white/10 text-white border border-white/20' 
                       : 'text-white/40 hover:text-white/60 border border-transparent hover:border-white/10'
                   }`}
                 >
-                  {filter}
+                  {filterType}
                 </button>
               ))}
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            {projects.map((project, i) => (
-              <ProjectCard key={project.id} project={project} index={i} />
+            {portfolioProjects.map((project, projectIndex) => (
+              <ProjectCard key={project.id} project={project} index={projectIndex} />
             ))}
           </div>
         </section>

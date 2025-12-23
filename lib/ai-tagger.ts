@@ -105,11 +105,11 @@ export function generateTagsLocally(
     'tailwind': ['tailwind', 'className='],
   };
 
-  for (const [lang, patterns] of Object.entries(languagePatterns)) {
-    if (patterns.some(p => lowerFilename.includes(p) || lowerContent.includes(p))) {
+  for (const [language, patterns] of Object.entries(languagePatterns)) {
+    if (patterns.some(pattern => lowerFilename.includes(pattern) || lowerContent.includes(pattern))) {
       tags.push({
-        id: `tag-lang-${lang}`,
-        name: lang,
+        id: `tag-lang-${language}`,
+        name: language,
         color: getRandomColor(),
         aiGenerated: false,
       });
@@ -128,7 +128,7 @@ export function generateTagsLocally(
   };
 
   for (const [topic, patterns] of Object.entries(topicPatterns)) {
-    if (patterns.some(p => lowerContent.includes(p))) {
+    if (patterns.some(pattern => lowerContent.includes(pattern))) {
       tags.push({
         id: `tag-topic-${topic}`,
         name: topic,
@@ -156,9 +156,9 @@ export function generateTagsLocally(
 
 // Extract text content from various file types
 export async function extractTextContent(file: File): Promise<string> {
-  const type = file.type;
+  const fileType = file.type;
   
-  if (type.startsWith('text/') || 
+  if (fileType.startsWith('text/') || 
       file.name.endsWith('.md') || 
       file.name.endsWith('.json') ||
       file.name.endsWith('.ts') ||

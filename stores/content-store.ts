@@ -140,7 +140,7 @@ export const useContentStore = create<ContentState>()(
 
       getItemsByFolder: (folderId) => {
         const state = get();
-        const folder = state.folders.find((f) => f.id === folderId);
+        const folder = state.folders.find((targetFolder) => targetFolder.id === folderId);
         if (!folder || folderId === 'all') return state.items;
 
         return state.items.filter((item) => {
