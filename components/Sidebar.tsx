@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { 
   FolderOpen, Search, Grid, List, LayoutGrid, Settings, 
   Plus, ChevronRight, Github, FileCode, Tag, Sparkles,
@@ -36,11 +36,7 @@ export default function Sidebar({ viewMode, onViewModeChange }: SidebarProps) {
     tags: true,
   });
 
-  // Apply theme on mount and changes
-  useEffect(() => {
-    const { applyTheme } = require('@/lib/themes');
-    applyTheme(theme);
-  }, [currentTheme, theme]);
+  // Theme is applied by ThemeProvider - no need to apply here
 
   const allTags = getAllTags();
 
