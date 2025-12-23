@@ -107,7 +107,14 @@ export default function CardDetailModal({ item, isOpen, onClose }: CardDetailMod
   const toggleChecklistItem = (checklistId: string, itemId: string) => {
     setChecklists(checklists.map(checklist => 
       checklist.id === checklistId 
-        ? { ...checklist, items: checklist.items.map(checklistItem => checklistItem.id === itemId ? { ...checklistItem, completed: !checklistItem.completed } : checklistItem) }
+        ? { 
+            ...checklist, 
+            items: checklist.items.map(checklistItem => 
+              checklistItem.id === itemId 
+                ? { ...checklistItem, completed: !checklistItem.completed } 
+                : checklistItem
+            ) 
+          }
         : checklist
     ));
   };
