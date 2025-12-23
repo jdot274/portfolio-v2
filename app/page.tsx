@@ -1,384 +1,191 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import Link from 'next/link';
 
 // ═══════════════════════════════════════════════════════════════════════════
-// AGENTOS AAA GALLERY - Multi-Widget Dashboard
+// PORTFOLIO HOME - Clean Dark Gradient with Layered Glass Outlines
 // ═══════════════════════════════════════════════════════════════════════════
 
-export default function AAAGallery() {
+const projects = [
+  { id: 1, title: 'NexusForge', description: 'Universal runtime + context engine', tags: ['Tauri', 'Rust', 'React'], type: 'App' },
+  { id: 2, title: 'SpatialAppStore', description: 'Glass-style storefront with orb glyphs', tags: ['SwiftUI', 'Metal'], type: 'App' },
+  { id: 3, title: 'AgentOS Gallery', description: 'Multi-widget AAA dashboard', tags: ['Next.js', 'Framer'], type: 'Demo', href: '/gallery' },
+  { id: 4, title: 'ClaudeHub', description: 'Extension system with canvas & chat', tags: ['Tauri', 'React'], type: 'App' },
+  { id: 5, title: 'AppMatrix', description: 'Scan & map macOS app capabilities', tags: ['Swift', 'AppKit'], type: 'Tool' },
+  { id: 6, title: 'MCPManager', description: 'Model Context Protocol manager', tags: ['Rust', 'MCP'], type: 'Tool' },
+];
+
+const stats = [
+  { value: '12', label: 'Projects' },
+  { value: '6', label: 'Languages' },
+  { value: '∞', label: 'Ideas' },
+];
+
+export default function Home() {
   return (
     <div className="min-h-screen relative">
-      {/* Graphite Background */}
-      <div className="graphite-bg" />
-      <div className="grid-hint" />
+      {/* Pure black gradient background */}
+      <div className="fixed inset-0 bg-gradient-to-b from-[#0a0a0c] via-[#0d0d10] to-[#08080a] -z-10" />
+      
+      {/* Subtle ambient glow */}
+      <div className="fixed top-0 left-1/4 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-[120px] -z-10" />
+      <div className="fixed bottom-0 right-1/4 w-[500px] h-[500px] bg-purple-500/5 rounded-full blur-[100px] -z-10" />
 
-      <main className="relative z-10 p-6 max-w-7xl mx-auto">
+      <main className="max-w-6xl mx-auto px-6 py-12">
         {/* Header */}
         <motion.header 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-start justify-between mb-8"
+          transition={{ duration: 0.6 }}
+          className="mb-16"
         >
-          <div>
-            <h1 className="text-title-lg">AgentOS — AAA Gallery</h1>
-            <p className="text-subtitle mt-1">Multi-widget dashboard with various AAA effects</p>
+          <div className="flex items-center gap-4 mb-6">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 flex items-center justify-center">
+              <span className="text-xl">◆</span>
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight text-white">Portfolio</h1>
+              <p className="text-sm text-white/50">Apps • Tools • Experiments</p>
+            </div>
           </div>
-          <Orb />
+
+          {/* Stats Row */}
+          <div className="flex gap-8">
+            {stats.map((stat, i) => (
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 + i * 0.1 }}
+                className="flex items-baseline gap-2"
+              >
+                <span className="text-2xl font-bold text-white">{stat.value}</span>
+                <span className="text-sm text-white/40">{stat.label}</span>
+              </motion.div>
+            ))}
+          </div>
         </motion.header>
 
-        {/* Widget Grid */}
-        <div className="grid grid-cols-3 gap-5">
-          {/* Row 1: Stats Cards */}
-          <StatCard value="247" label="Projects" delay={0} />
-          <StatCard value="18" label="Active Agents" delay={0.1} color="purple" />
-          <StatCard value="99.7%" label="Uptime" delay={0.2} color="cyan" />
+        {/* Projects Grid */}
+        <section>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-lg font-semibold text-white/80">Projects</h2>
+            <div className="flex gap-2">
+              {['All', 'App', 'Tool', 'Demo'].map((filter) => (
+                <button 
+                  key={filter}
+                  className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${
+                    filter === 'All' 
+                      ? 'bg-white/10 text-white border border-white/20' 
+                      : 'text-white/40 hover:text-white/60 border border-transparent hover:border-white/10'
+                  }`}
+                >
+                  {filter}
+                </button>
+              ))}
+            </div>
+          </div>
 
-          {/* Row 2: Inspector (Silver) + Terminal */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="col-span-2"
-          >
-            <InspectorCard />
-          </motion.div>
+          <div className="grid grid-cols-2 gap-4">
+            {projects.map((project, i) => (
+              <ProjectCard key={project.id} project={project} index={i} />
+            ))}
+          </div>
+        </section>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.35 }}
-          >
-            <TerminalCard />
-          </motion.div>
-
-          {/* Row 3: Mixed Shell + Activity */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="col-span-2"
-          >
-            <MixedShellCard />
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.45 }}
-          >
-            <ActivityCard />
-          </motion.div>
-
-          {/* Row 4: Quick Actions + Memory Graph */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-          >
-            <QuickActionsCard />
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.55 }}
-            className="col-span-2"
-          >
-            <MemoryGraphCard />
-          </motion.div>
-        </div>
+        {/* Footer Nav */}
+        <motion.footer 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8 }}
+          className="mt-16 pt-8 border-t border-white/5"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex gap-6">
+              <Link href="/gallery" className="text-sm text-white/40 hover:text-white/70 transition-colors">
+                Widget Gallery
+              </Link>
+              <a href="https://github.com/jdot274" target="_blank" rel="noopener" className="text-sm text-white/40 hover:text-white/70 transition-colors">
+                GitHub
+              </a>
+            </div>
+            <p className="text-xs text-white/20">© 2024</p>
+          </div>
+        </motion.footer>
       </main>
     </div>
   );
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// COMPONENTS
+// PROJECT CARD - Layered glass with subtle outlines
 // ═══════════════════════════════════════════════════════════════════════════
 
-function Orb() {
-  return (
-    <div className="orb" />
-  );
+interface Project {
+  id: number;
+  title: string;
+  description: string;
+  tags: string[];
+  type: string;
+  href?: string;
 }
 
-function LEDIndicator({ label = "Live" }: { label?: string }) {
-  return (
-    <div className="led-indicator">
-      <div className="led-dot" />
-      <span className="led-label">{label}</span>
-    </div>
-  );
-}
-
-function StatCard({ 
-  value, 
-  label, 
-  delay = 0,
-  color = "blue"
-}: { 
-  value: string; 
-  label: string; 
-  delay?: number;
-  color?: "blue" | "purple" | "cyan";
-}) {
-  const colors = {
-    blue: { bg: "rgba(59, 130, 246, 0.15)", border: "rgba(59, 130, 246, 0.3)", glow: "rgba(59, 130, 246, 0.5)", line: "rgba(59, 130, 246, 0.6)" },
-    purple: { bg: "rgba(139, 92, 246, 0.15)", border: "rgba(139, 92, 246, 0.3)", glow: "rgba(139, 92, 246, 0.5)", line: "rgba(139, 92, 246, 0.6)" },
-    cyan: { bg: "rgba(6, 182, 212, 0.15)", border: "rgba(6, 182, 212, 0.3)", glow: "rgba(6, 182, 212, 0.5)", line: "rgba(6, 182, 212, 0.6)" },
-  };
-  const c = colors[color];
+function ProjectCard({ project, index }: { project: Project; index: number }) {
+  const CardWrapper = project.href ? Link : 'div';
+  const wrapperProps = project.href ? { href: project.href } : {};
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay }}
-      whileHover={{ scale: 1.02, y: -4 }}
-      className="relative p-6 rounded-[20px] overflow-hidden cursor-pointer"
-      style={{ 
-        background: `linear-gradient(135deg, ${c.bg}, rgba(255,255,255,0.02))`,
-        border: `1px solid ${c.border}`,
-      }}
+      transition={{ delay: 0.3 + index * 0.08, duration: 0.5 }}
     >
-      {/* Top glow line */}
-      <div 
-        className="absolute top-0 left-0 right-0 h-[1px]"
-        style={{ background: `linear-gradient(90deg, transparent, ${c.line}, transparent)` }}
-      />
-      {/* Radial glow */}
-      <div 
-        className="absolute inset-0 pointer-events-none"
-        style={{ background: `radial-gradient(circle at 50% 0%, ${c.bg}, transparent 70%)` }}
-      />
-      
-      <div 
-        className="text-[2.5rem] font-bold tracking-tight"
-        style={{ textShadow: `0 0 40px ${c.glow}` }}
+      <CardWrapper 
+        {...wrapperProps as any}
+        className="group block relative p-5 rounded-2xl cursor-pointer transition-all duration-300
+                   bg-gradient-to-br from-white/[0.04] to-transparent
+                   border border-white/[0.08]
+                   hover:border-white/[0.15] hover:bg-white/[0.06]
+                   hover:shadow-[0_0_40px_rgba(255,255,255,0.03)]"
       >
-        {value}
-      </div>
-      <div className="stat-label">{label}</div>
+        {/* Subtle top edge highlight */}
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent rounded-t-2xl" />
+        
+        {/* Content */}
+        <div className="relative">
+          <div className="flex items-start justify-between mb-3">
+            <div>
+              <h3 className="text-base font-semibold text-white/90 group-hover:text-white transition-colors">
+                {project.title}
+              </h3>
+              <p className="text-sm text-white/40 mt-1">{project.description}</p>
+            </div>
+            <span className="text-[10px] font-medium text-white/30 uppercase tracking-wider px-2 py-1 rounded-md bg-white/5 border border-white/5">
+              {project.type}
+            </span>
+          </div>
+
+          {/* Tags */}
+          <div className="flex flex-wrap gap-2 mt-4">
+            {project.tags.map((tag) => (
+              <span 
+                key={tag}
+                className="text-xs text-white/35 px-2 py-0.5 rounded-md bg-white/[0.03] border border-white/[0.06]"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+
+          {/* Hover arrow */}
+          {project.href && (
+            <div className="absolute bottom-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity">
+              <span className="text-white/30 text-lg">→</span>
+            </div>
+          )}
+        </div>
+      </CardWrapper>
     </motion.div>
-  );
-}
-
-function InspectorCard() {
-  const permissions = ["Files: Selected", "Terminal: Allowlist", "Browser: Scoped", "Export: Artifacts"];
-  const outputs = [
-    { name: "deck.pptx", tag: "artifact" },
-    { name: "sources.md", tag: "citations" },
-    { name: "runlog.json", tag: "memory" },
-  ];
-
-  return (
-    <div className="silver-card">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-title" style={{ color: 'rgba(0,0,0,0.82)' }}>Inspector</h2>
-        <LEDIndicator label="Live" />
-      </div>
-
-      <div className="divider-light" />
-
-      <div className="mb-4">
-        <p className="text-label mb-3" style={{ color: 'rgba(0,0,0,0.55)' }}>Permissions</p>
-        <div className="flex flex-wrap gap-2">
-          {permissions.map((p) => (
-            <span key={p} className="chip chip-light">{p}</span>
-          ))}
-        </div>
-      </div>
-
-      <div className="mb-4">
-        <p className="text-label mb-3" style={{ color: 'rgba(0,0,0,0.55)' }}>Outputs</p>
-        <div className="space-y-2">
-          {outputs.map((o) => (
-            <div key={o.name} className="output-row">
-              <span className="output-name">{o.name}</span>
-              <span className="output-tag">{o.tag}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="flex gap-3">
-        <button className="btn-silver">Export</button>
-        <button className="btn-silver">Publish</button>
-      </div>
-    </div>
-  );
-}
-
-function TerminalCard() {
-  const terminalOutput = `$ agentos run card:repo2pr --demo
-• repo: sandboxed ✅
-• tests: allowlisted ✅
-
-[1/4] plan … ok
-[2/4] implement … ok
-[3/4] test … ok
-[4/4] export … pr + notes
-
-DONE ✅`;
-
-  return (
-    <div className="terminal-card h-full">
-      <div className="flex items-center justify-between mb-3">
-        <span className="text-sm font-bold font-mono" style={{ color: 'var(--aaa-fg)' }}>terminal</span>
-        <LEDIndicator label="running" />
-      </div>
-      <div className="divider-dark" />
-      <pre className="terminal-text">
-        {terminalOutput}
-        <span className="terminal-cursor" />
-      </pre>
-    </div>
-  );
-}
-
-function MixedShellCard() {
-  const [message, setMessage] = useState('');
-
-  return (
-    <div className="glass-card">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-title">Chat Shell</h2>
-        <LEDIndicator label="agent" />
-      </div>
-
-      <div className="flex gap-4">
-        {/* Chat Area */}
-        <div className="flex-1 flex flex-col gap-3">
-          <div className="bubble bubble-user">
-            Show me the run plan and export artifacts.
-          </div>
-          <div className="bubble bubble-assistant">
-            Running tools… opening Terminal + preparing export.
-          </div>
-          
-          <div className="mt-auto flex gap-3">
-            <input 
-              type="text"
-              placeholder="Message"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              className="input-glass flex-1"
-            />
-            <button className="btn-glass">Send</button>
-          </div>
-        </div>
-
-        {/* Mini Inspector */}
-        <div className="w-44">
-          <p className="text-label mb-3">Inspector</p>
-          <div className="space-y-2">
-            <span className="chip chip-dark block text-center">Files: scoped</span>
-            <span className="chip chip-dark block text-center">Terminal: allowlist</span>
-            <span className="chip chip-dark block text-center">Export: ready</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ActivityCard() {
-  const activities = [
-    { time: "2m ago", action: "Agent completed repo2pr", status: "success" },
-    { time: "5m ago", action: "Export triggered", status: "info" },
-    { time: "12m ago", action: "Test suite passed", status: "success" },
-    { time: "1h ago", action: "Memory snapshot saved", status: "info" },
-  ];
-
-  return (
-    <div className="glass-card h-full">
-      <h2 className="text-title mb-4">Activity</h2>
-      <div className="space-y-3">
-        {activities.map((a, i) => (
-          <div key={i} className="flex items-center gap-3">
-            <div 
-              className="w-2 h-2 rounded-full"
-              style={{ 
-                background: a.status === 'success' ? 'var(--accent-green)' : 'var(--accent-blue)',
-                boxShadow: a.status === 'success' 
-                  ? '0 0 8px rgba(34, 197, 94, 0.5)' 
-                  : '0 0 8px rgba(59, 130, 246, 0.5)'
-              }}
-            />
-            <div className="flex-1">
-              <p className="text-sm font-medium" style={{ color: 'var(--aaa-fg)' }}>{a.action}</p>
-              <p className="text-xs" style={{ color: 'var(--aaa-muted)' }}>{a.time}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function QuickActionsCard() {
-  const actions = [
-    { icon: "🚀", label: "Deploy" },
-    { icon: "🔍", label: "Search" },
-    { icon: "📦", label: "Export" },
-    { icon: "⚙️", label: "Settings" },
-  ];
-
-  return (
-    <div className="glass-card">
-      <h2 className="text-title mb-4">Quick Actions</h2>
-      <div className="grid grid-cols-2 gap-3">
-        {actions.map((a) => (
-          <motion.button
-            key={a.label}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.98 }}
-            className="btn-glass flex flex-col items-center gap-2 py-4"
-          >
-            <span className="text-2xl">{a.icon}</span>
-            <span className="text-sm">{a.label}</span>
-          </motion.button>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function MemoryGraphCard() {
-  // Fake graph bars
-  const bars = [40, 65, 80, 55, 90, 70, 85, 60, 75, 95, 50, 88];
-
-  return (
-    <div className="glass-card">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-title">Memory Usage</h2>
-        <div className="flex items-center gap-3">
-          <span className="text-2xl font-bold" style={{ 
-            color: 'var(--aaa-fg)',
-            textShadow: '0 0 30px rgba(6, 182, 212, 0.5)'
-          }}>2.4 GB</span>
-          <span className="chip chip-dark">/ 8 GB</span>
-        </div>
-      </div>
-
-      {/* Graph */}
-      <div className="flex items-end gap-2 h-32">
-        {bars.map((h, i) => (
-          <motion.div
-            key={i}
-            initial={{ height: 0 }}
-            animate={{ height: `${h}%` }}
-            transition={{ delay: 0.6 + i * 0.05, duration: 0.5 }}
-            className="flex-1 rounded-t-md"
-            style={{
-              background: `linear-gradient(180deg, rgba(6, 182, 212, 0.8), rgba(6, 182, 212, 0.3))`,
-              boxShadow: '0 0 20px rgba(6, 182, 212, 0.3)',
-            }}
-          />
-        ))}
-      </div>
-    </div>
   );
 }
