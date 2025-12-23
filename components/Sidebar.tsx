@@ -44,13 +44,7 @@ export default function Sidebar({ viewMode, onViewModeChange }: SidebarProps) {
   ];
 
   return (
-    <aside 
-      className="w-64 h-full flex flex-col"
-      style={{ 
-        background: 'var(--color-layer1)',
-        borderRight: '1px solid var(--color-border)'
-      }}
-    >
+    <aside className="glass-sidebar w-64 h-full flex flex-col">
       {/* Logo */}
       <div className="p-5 pb-4">
         <div className="flex items-center gap-3">
@@ -77,17 +71,22 @@ export default function Sidebar({ viewMode, onViewModeChange }: SidebarProps) {
       {/* View Mode */}
       <div className="px-3 pb-3">
         <div 
-          className="p-1 rounded-lg flex gap-0.5"
-          style={{ background: 'var(--color-base)' }}
+          className="p-1 rounded-xl flex gap-0.5"
+          style={{ 
+            background: 'rgba(0,0,0,0.3)',
+            border: '1px solid rgba(255,255,255,0.06)'
+          }}
         >
           {views.map((view) => (
             <button
               key={view.id}
               onClick={() => onViewModeChange(view.id)}
-              className="flex-1 py-1.5 px-2 rounded-md text-xs font-medium transition-all duration-200"
+              className="flex-1 py-1.5 px-2 rounded-lg text-xs font-medium transition-all duration-200"
               style={{
-                background: viewMode === view.id ? 'var(--color-surface-active)' : 'transparent',
+                background: viewMode === view.id ? 'rgba(255,255,255,0.08)' : 'transparent',
                 color: viewMode === view.id ? 'var(--color-text)' : 'var(--color-text-muted)',
+                border: viewMode === view.id ? '1px solid rgba(255,255,255,0.1)' : '1px solid transparent',
+                boxShadow: viewMode === view.id ? 'inset 0 1px 0 rgba(255,255,255,0.05)' : 'none'
               }}
             >
               {view.label}
@@ -132,8 +131,10 @@ export default function Sidebar({ viewMode, onViewModeChange }: SidebarProps) {
                         onClick={() => setActiveFilter({ type: folder.types?.[0], folder: folder.id })}
                         className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm transition-all duration-150"
                         style={{
-                          background: isActive ? 'var(--color-surface-active)' : 'transparent',
+                          background: isActive ? 'rgba(255,255,255,0.06)' : 'transparent',
+                          border: isActive ? '1px solid rgba(255,255,255,0.08)' : '1px solid transparent',
                           color: isActive ? 'var(--color-text)' : 'var(--color-text-secondary)',
+                          boxShadow: isActive ? 'inset 0 1px 0 rgba(255,255,255,0.04)' : 'none'
                         }}
                       >
                         <span className="text-base">{folder.icon}</span>
@@ -189,11 +190,11 @@ export default function Sidebar({ viewMode, onViewModeChange }: SidebarProps) {
                     <button
                       key={tag.id}
                       onClick={() => setActiveFilter({ tags: [tag.id] })}
-                      className="text-xs px-2 py-1 rounded-md transition-all duration-150"
+                      className="text-xs px-2.5 py-1 rounded-lg transition-all duration-150 hover:bg-[rgba(255,255,255,0.08)]"
                       style={{
-                        background: 'var(--color-surface)',
+                        background: 'rgba(255,255,255,0.04)',
                         color: 'var(--color-text-secondary)',
-                        border: '1px solid var(--color-border-subtle)'
+                        border: '1px solid rgba(255,255,255,0.08)'
                       }}
                     >
                       {tag.name}
@@ -209,15 +210,11 @@ export default function Sidebar({ viewMode, onViewModeChange }: SidebarProps) {
       {/* Footer */}
       <div 
         className="p-3"
-        style={{ borderTop: '1px solid var(--color-border-subtle)' }}
+        style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}
       >
         <button 
-          className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all duration-150"
-          style={{
-            background: 'var(--color-surface)',
-            color: 'var(--color-text-secondary)',
-            border: '1px solid var(--color-border-subtle)'
-          }}
+          className="glass-button w-full flex items-center gap-2 px-3 py-2.5 text-sm"
+          style={{ color: 'var(--color-text-secondary)' }}
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />

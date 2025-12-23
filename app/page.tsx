@@ -52,16 +52,10 @@ export default function Home() {
         {/* Header */}
         <header 
           className="flex items-center justify-between px-6 py-4"
-          style={{ borderBottom: '1px solid var(--color-border)' }}
+          style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
         >
           {/* Search */}
-          <div 
-            className="flex items-center gap-3 px-4 py-2.5 rounded-xl w-96 transition-all duration-200"
-            style={{ 
-              background: 'var(--color-surface)',
-              border: '1px solid var(--color-border)'
-            }}
-          >
+          <div className="glass-input flex items-center gap-3 px-4 py-2.5 w-96">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ color: 'var(--color-text-muted)' }}>
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
@@ -78,16 +72,12 @@ export default function Home() {
           </div>
 
           {/* Actions */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <button
               onClick={loadGitHubData}
               disabled={isLoading}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all duration-150 disabled:opacity-50"
-              style={{ 
-                background: 'var(--color-surface)',
-                border: '1px solid var(--color-border)',
-                color: 'var(--color-text-secondary)'
-              }}
+              className="glass-button flex items-center gap-2 px-4 py-2.5 text-sm disabled:opacity-50"
+              style={{ color: 'var(--color-text-secondary)' }}
             >
               <svg className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -95,11 +85,12 @@ export default function Home() {
               Sync
             </button>
             <button
-              className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-150"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200"
               style={{ 
-                background: 'var(--color-accent)',
+                background: 'linear-gradient(135deg, var(--color-accent), #6366f1)',
                 color: 'white',
-                boxShadow: '0 0 20px var(--color-accent-glow)'
+                border: '1px solid rgba(255,255,255,0.1)',
+                boxShadow: '0 0 30px var(--color-accent-glow), inset 0 1px 0 rgba(255,255,255,0.2)'
               }}
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -127,7 +118,7 @@ export default function Home() {
         <footer 
           className="flex items-center justify-between px-6 py-3 text-xs"
           style={{ 
-            borderTop: '1px solid var(--color-border)',
+            borderTop: '1px solid rgba(255,255,255,0.06)',
             color: 'var(--color-text-muted)'
           }}
         >
@@ -174,7 +165,7 @@ function DashboardView({ items, onRefresh }: { items: ContentItem[]; onRefresh: 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.05 }}
-            className="glass-panel-subtle p-5"
+            className="glass-card p-5"
           >
             <p className="text-2xl font-semibold" style={{ color: 'var(--color-text)' }}>
               {stat.value}
@@ -187,10 +178,10 @@ function DashboardView({ items, onRefresh }: { items: ContentItem[]; onRefresh: 
       </div>
 
       {/* Recent */}
-      <div className="glass-panel-subtle overflow-hidden">
+      <div className="glass-panel overflow-hidden">
         <div 
           className="flex items-center justify-between px-5 py-4"
-          style={{ borderBottom: '1px solid var(--color-border-subtle)' }}
+          style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
         >
           <h3 className="text-sm font-medium" style={{ color: 'var(--color-text)' }}>
             Recent Activity
@@ -211,10 +202,10 @@ function DashboardView({ items, onRefresh }: { items: ContentItem[]; onRefresh: 
               transition={{ delay: i * 0.03 }}
               className="flex items-center gap-4 px-5 py-3.5 transition-all duration-150"
               style={{ 
-                borderBottom: i < recentItems.length - 1 ? '1px solid var(--color-border-subtle)' : 'none',
+                borderBottom: i < recentItems.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none',
                 color: 'var(--color-text)'
               }}
-              onMouseEnter={(e) => e.currentTarget.style.background = 'var(--color-surface-hover)'}
+              onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.03)'}
               onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
             >
               <span className="text-lg">{getContentTypeIcon(item.type)}</span>
@@ -249,7 +240,7 @@ function GridView({ items }: { items: ContentItem[] }) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: i * 0.02 }}
-          className="glass-panel-subtle p-4 hover-lift block"
+          className="glass-card p-4 block"
         >
           <div className="flex items-start gap-3 mb-3">
             <span className="text-lg">{getContentTypeIcon(item.type)}</span>
@@ -276,7 +267,7 @@ function GridView({ items }: { items: ContentItem[] }) {
 
 function ListView({ items }: { items: ContentItem[] }) {
   return (
-    <div className="glass-panel-subtle overflow-hidden">
+    <div className="glass-panel overflow-hidden">
       {items.map((item, i) => (
         <motion.a
           key={item.id}
@@ -288,10 +279,10 @@ function ListView({ items }: { items: ContentItem[] }) {
           transition={{ delay: i * 0.01 }}
           className="flex items-center gap-4 px-5 py-3.5 transition-all duration-150"
           style={{ 
-            borderBottom: i < items.length - 1 ? '1px solid var(--color-border-subtle)' : 'none',
+            borderBottom: i < items.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none',
             color: 'var(--color-text)'
           }}
-          onMouseEnter={(e) => e.currentTarget.style.background = 'var(--color-surface-hover)'}
+          onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.03)'}
           onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
         >
           <span className="text-lg">{getContentTypeIcon(item.type)}</span>
@@ -299,10 +290,14 @@ function ListView({ items }: { items: ContentItem[] }) {
             <p className="text-sm font-medium truncate">{item.title}</p>
           </div>
           {item.github?.language && (
-            <span className="text-xs px-2 py-0.5 rounded" style={{ 
-              background: 'var(--color-surface)',
-              color: 'var(--color-text-muted)'
-            }}>
+            <span 
+              className="text-xs px-2.5 py-1 rounded-md"
+              style={{ 
+                background: 'rgba(255,255,255,0.05)',
+                border: '1px solid rgba(255,255,255,0.08)',
+                color: 'var(--color-text-muted)'
+              }}
+            >
               {item.github.language}
             </span>
           )}
