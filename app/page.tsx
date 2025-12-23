@@ -1,313 +1,384 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import Sidebar, { ViewMode } from '@/components/Sidebar';
-import { useContentStore } from '@/stores/content-store';
-import { fetchUserRepos, fetchUserGists, repoToContentItem, gistToContentItem } from '@/lib/github-api';
-import { ContentItem } from '@/types';
-import { getContentTypeIcon } from '@/lib/upload-router';
+import { useState } from 'react';
 
-export default function Home() {
-  const {
-    items,
-    githubUsername,
-    githubToken,
-    isLoading,
-    setItems,
-    setIsLoading,
-    getFilteredItems,
-  } = useContentStore();
+// ═══════════════════════════════════════════════════════════════════════════
+// AGENTOS AAA GALLERY - Multi-Widget Dashboard
+// ═══════════════════════════════════════════════════════════════════════════
 
-  const [viewMode, setViewMode] = useState<ViewMode>('dashboard');
-
-  useEffect(() => {
-    if (items.length === 0) {
-      loadGitHubData();
-    }
-  }, []);
-
-  const loadGitHubData = async () => {
-    setIsLoading(true);
-    try {
-      const [repos, gists] = await Promise.all([
-        fetchUserRepos(githubUsername, githubToken || undefined),
-        fetchUserGists(githubUsername, githubToken || undefined).catch(() => []),
-      ]);
-      setItems([...repos.map(repoToContentItem), ...gists.map(gistToContentItem)]);
-    } catch (error) {
-      console.error('Failed to load GitHub data:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const filteredItems = getFilteredItems();
-
+export default function AAAGallery() {
   return (
-    <div className="flex h-screen" style={{ background: 'var(--color-base)' }}>
-      <Sidebar viewMode={viewMode} onViewModeChange={setViewMode} />
+    <div className="min-h-screen relative">
+      {/* Graphite Background */}
+      <div className="graphite-bg" />
+      <div className="grid-hint" />
 
-      <main className="flex-1 flex flex-col overflow-hidden relative">
+      <main className="relative z-10 p-6 max-w-7xl mx-auto">
         {/* Header */}
-        <header 
-          className="flex items-center justify-between px-8 py-5"
-          style={{ borderBottom: '1px solid var(--color-border)' }}
+        <motion.header 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex items-start justify-between mb-8"
         >
-          {/* Search */}
-          <div className="glass-input flex items-center gap-3 px-5 py-3 w-[420px]">
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ color: 'var(--color-text-ghost)' }}>
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-            <input
-              type="text"
-              placeholder="Search..."
-              className="flex-1 bg-transparent outline-none text-sm"
-              style={{ color: 'var(--color-text-primary)' }}
-            />
-            <div className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--color-text-ghost)' }}>
-              <kbd className="px-1.5 py-0.5 rounded" style={{ background: 'rgba(255,255,255,0.06)' }}>⌘</kbd>
-              <kbd className="px-1.5 py-0.5 rounded" style={{ background: 'rgba(255,255,255,0.06)' }}>K</kbd>
-            </div>
+          <div>
+            <h1 className="text-title-lg">AgentOS — AAA Gallery</h1>
+            <p className="text-subtitle mt-1">Multi-widget dashboard with various AAA effects</p>
           </div>
+          <Orb />
+        </motion.header>
 
-          {/* Actions */}
-          <div className="flex items-center gap-4">
-            <button
-              onClick={loadGitHubData}
-              disabled={isLoading}
-              className="glass-button flex items-center gap-2.5 px-5 py-2.5 text-sm font-medium disabled:opacity-50"
-              style={{ color: 'var(--color-text-secondary)' }}
-            >
-              <svg className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-              </svg>
-              Sync
-            </button>
-            <button className="button-primary flex items-center gap-2.5 px-6 py-2.5 text-sm font-semibold text-white">
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-              </svg>
-              New
-            </button>
-          </div>
-        </header>
+        {/* Widget Grid */}
+        <div className="grid grid-cols-3 gap-5">
+          {/* Row 1: Stats Cards */}
+          <StatCard value="247" label="Projects" delay={0} />
+          <StatCard value="18" label="Active Agents" delay={0.1} color="purple" />
+          <StatCard value="99.7%" label="Uptime" delay={0.2} color="cyan" />
 
-        {/* Content */}
-        <div className="flex-1 overflow-y-auto p-8">
-          {isLoading ? (
-            <LoadingState />
-          ) : viewMode === 'dashboard' ? (
-            <DashboardView items={filteredItems} onRefresh={loadGitHubData} />
-          ) : viewMode === 'grid' ? (
-            <GridView items={filteredItems} />
-          ) : viewMode === 'list' ? (
-            <ListView items={filteredItems} />
-          ) : null}
+          {/* Row 2: Inspector (Silver) + Terminal */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="col-span-2"
+          >
+            <InspectorCard />
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.35 }}
+          >
+            <TerminalCard />
+          </motion.div>
+
+          {/* Row 3: Mixed Shell + Activity */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="col-span-2"
+          >
+            <MixedShellCard />
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.45 }}
+          >
+            <ActivityCard />
+          </motion.div>
+
+          {/* Row 4: Quick Actions + Memory Graph */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+          >
+            <QuickActionsCard />
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.55 }}
+            className="col-span-2"
+          >
+            <MemoryGraphCard />
+          </motion.div>
         </div>
-
-        {/* Footer */}
-        <footer 
-          className="flex items-center justify-between px-8 py-4"
-          style={{ 
-            borderTop: '1px solid var(--color-border)',
-            color: 'var(--color-text-ghost)'
-          }}
-        >
-          <span className="text-xs font-medium">{items.length} items</span>
-          <span className="text-xs">@{githubUsername}</span>
-        </footer>
       </main>
     </div>
   );
 }
 
-function LoadingState() {
+// ═══════════════════════════════════════════════════════════════════════════
+// COMPONENTS
+// ═══════════════════════════════════════════════════════════════════════════
+
+function Orb() {
   return (
-    <div className="flex items-center justify-center h-64">
-      <div className="flex flex-col items-center gap-4">
-        <div 
-          className="w-10 h-10 rounded-full border-2 border-t-transparent animate-spin"
-          style={{ borderColor: 'var(--color-accent)', borderTopColor: 'transparent' }}
-        />
-        <p className="text-sm font-medium" style={{ color: 'var(--color-text-tertiary)' }}>Loading...</p>
-      </div>
+    <div className="orb" />
+  );
+}
+
+function LEDIndicator({ label = "Live" }: { label?: string }) {
+  return (
+    <div className="led-indicator">
+      <div className="led-dot" />
+      <span className="led-label">{label}</span>
     </div>
   );
 }
 
-function DashboardView({ items, onRefresh }: { items: ContentItem[]; onRefresh: () => void }) {
-  const repos = items.filter(i => i.type === 'repo');
-  const recentItems = [...items].sort((a, b) => 
-    new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
-  ).slice(0, 6);
+function StatCard({ 
+  value, 
+  label, 
+  delay = 0,
+  color = "blue"
+}: { 
+  value: string; 
+  label: string; 
+  delay?: number;
+  color?: "blue" | "purple" | "cyan";
+}) {
+  const colors = {
+    blue: { bg: "rgba(59, 130, 246, 0.15)", border: "rgba(59, 130, 246, 0.3)", glow: "rgba(59, 130, 246, 0.5)", line: "rgba(59, 130, 246, 0.6)" },
+    purple: { bg: "rgba(139, 92, 246, 0.15)", border: "rgba(139, 92, 246, 0.3)", glow: "rgba(139, 92, 246, 0.5)", line: "rgba(139, 92, 246, 0.6)" },
+    cyan: { bg: "rgba(6, 182, 212, 0.15)", border: "rgba(6, 182, 212, 0.3)", glow: "rgba(6, 182, 212, 0.5)", line: "rgba(6, 182, 212, 0.6)" },
+  };
+  const c = colors[color];
 
-  const stats = [
-    { label: 'Total Items', value: items.length, delay: 0 },
-    { label: 'Repositories', value: repos.length, delay: 0.05 },
-    { label: 'Languages', value: new Set(repos.map(r => r.github?.language).filter(Boolean)).size, delay: 0.1 },
-    { label: 'Stars', value: repos.reduce((acc, r) => acc + (r.github?.stars || 0), 0), delay: 0.15 },
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay }}
+      whileHover={{ scale: 1.02, y: -4 }}
+      className="relative p-6 rounded-[20px] overflow-hidden cursor-pointer"
+      style={{ 
+        background: `linear-gradient(135deg, ${c.bg}, rgba(255,255,255,0.02))`,
+        border: `1px solid ${c.border}`,
+      }}
+    >
+      {/* Top glow line */}
+      <div 
+        className="absolute top-0 left-0 right-0 h-[1px]"
+        style={{ background: `linear-gradient(90deg, transparent, ${c.line}, transparent)` }}
+      />
+      {/* Radial glow */}
+      <div 
+        className="absolute inset-0 pointer-events-none"
+        style={{ background: `radial-gradient(circle at 50% 0%, ${c.bg}, transparent 70%)` }}
+      />
+      
+      <div 
+        className="text-[2.5rem] font-bold tracking-tight"
+        style={{ textShadow: `0 0 40px ${c.glow}` }}
+      >
+        {value}
+      </div>
+      <div className="stat-label">{label}</div>
+    </motion.div>
+  );
+}
+
+function InspectorCard() {
+  const permissions = ["Files: Selected", "Terminal: Allowlist", "Browser: Scoped", "Export: Artifacts"];
+  const outputs = [
+    { name: "deck.pptx", tag: "artifact" },
+    { name: "sources.md", tag: "citations" },
+    { name: "runlog.json", tag: "memory" },
   ];
 
   return (
-    <div className="space-y-8 max-w-6xl">
-      {/* Stats Grid */}
-      <div className="grid grid-cols-4 gap-5">
-        {stats.map((stat) => (
-          <GlassCard key={stat.label} delay={stat.delay}>
-            <div className="p-6">
-              <p className="text-stat">{stat.value}</p>
-              <p className="text-stat-label">{stat.label}</p>
-            </div>
-          </GlassCard>
-        ))}
+    <div className="silver-card">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-title" style={{ color: 'rgba(0,0,0,0.82)' }}>Inspector</h2>
+        <LEDIndicator label="Live" />
       </div>
 
-      {/* Recent Activity */}
-      <div>
-        <div className="flex items-center justify-between mb-5">
-          <h3 className="text-sm font-semibold uppercase tracking-wider" style={{ color: 'var(--color-text-ghost)' }}>
-            Recent Activity
-          </h3>
-          <span className="text-xs font-medium" style={{ color: 'var(--color-text-ghost)' }}>
-            {recentItems.length} items
-          </span>
-        </div>
-        <div className="space-y-3 stagger-children">
-          {recentItems.map((item, i) => (
-            <GlassCard key={item.id} delay={0.2 + i * 0.05} href={item.url}>
-              <div className="flex items-center gap-5 p-5">
-                <div className="icon-shimmer text-2xl">{getContentTypeIcon(item.type)}</div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-title truncate">{item.title}</p>
-                  {item.description && (
-                    <p className="text-subtitle truncate mt-1">{item.description}</p>
-                  )}
-                </div>
-                <span className="text-meta">{new Date(item.updatedAt).toLocaleDateString()}</span>
-              </div>
-            </GlassCard>
+      <div className="divider-light" />
+
+      <div className="mb-4">
+        <p className="text-label mb-3" style={{ color: 'rgba(0,0,0,0.55)' }}>Permissions</p>
+        <div className="flex flex-wrap gap-2">
+          {permissions.map((p) => (
+            <span key={p} className="chip chip-light">{p}</span>
           ))}
         </div>
       </div>
-    </div>
-  );
-}
 
-function GridView({ items }: { items: ContentItem[] }) {
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 stagger-children">
-      {items.map((item, i) => (
-        <GlassCard key={item.id} delay={i * 0.03} href={item.url}>
-          <div className="p-5">
-            <div className="flex items-start gap-4 mb-4">
-              <div className="icon-shimmer text-2xl">{getContentTypeIcon(item.type)}</div>
-              <h3 className="text-title truncate flex-1">{item.title}</h3>
+      <div className="mb-4">
+        <p className="text-label mb-3" style={{ color: 'rgba(0,0,0,0.55)' }}>Outputs</p>
+        <div className="space-y-2">
+          {outputs.map((o) => (
+            <div key={o.name} className="output-row">
+              <span className="output-name">{o.name}</span>
+              <span className="output-tag">{o.tag}</span>
             </div>
-            {item.description && (
-              <p className="text-subtitle line-clamp-2 mb-4">{item.description}</p>
-            )}
-            {item.github && (
-              <div className="flex items-center gap-4">
-                {item.github.stars > 0 && (
-                  <span className="text-meta">⭐ {item.github.stars}</span>
-                )}
-                {item.github.language && (
-                  <span 
-                    className="text-xs px-2.5 py-1 rounded-lg"
-                    style={{ 
-                      background: 'rgba(255,255,255,0.06)',
-                      border: '1px solid var(--color-border)',
-                      color: 'var(--color-text-tertiary)'
-                    }}
-                  >
-                    {item.github.language}
-                  </span>
-                )}
-              </div>
-            )}
-          </div>
-        </GlassCard>
-      ))}
+          ))}
+        </div>
+      </div>
+
+      <div className="flex gap-3">
+        <button className="btn-silver">Export</button>
+        <button className="btn-silver">Publish</button>
+      </div>
     </div>
   );
 }
 
-function ListView({ items }: { items: ContentItem[] }) {
+function TerminalCard() {
+  const terminalOutput = `$ agentos run card:repo2pr --demo
+• repo: sandboxed ✅
+• tests: allowlisted ✅
+
+[1/4] plan … ok
+[2/4] implement … ok
+[3/4] test … ok
+[4/4] export … pr + notes
+
+DONE ✅`;
+
   return (
-    <div className="space-y-2 stagger-children">
-      {items.map((item, i) => (
-        <GlassCard key={item.id} delay={i * 0.02} href={item.url}>
-          <div className="flex items-center gap-5 px-5 py-4">
-            <div className="icon-shimmer text-xl">{getContentTypeIcon(item.type)}</div>
-            <div className="flex-1 min-w-0">
-              <p className="text-title truncate">{item.title}</p>
-            </div>
-            {item.github?.language && (
-              <span 
-                className="text-xs px-2.5 py-1 rounded-lg"
-                style={{ 
-                  background: 'rgba(255,255,255,0.06)',
-                  border: '1px solid var(--color-border)',
-                  color: 'var(--color-text-tertiary)'
-                }}
-              >
-                {item.github.language}
-              </span>
-            )}
-            <span className="text-meta">{new Date(item.updatedAt).toLocaleDateString()}</span>
-          </div>
-        </GlassCard>
-      ))}
+    <div className="terminal-card h-full">
+      <div className="flex items-center justify-between mb-3">
+        <span className="text-sm font-bold font-mono" style={{ color: 'var(--aaa-fg)' }}>terminal</span>
+        <LEDIndicator label="running" />
+      </div>
+      <div className="divider-dark" />
+      <pre className="terminal-text">
+        {terminalOutput}
+        <span className="terminal-cursor" />
+      </pre>
     </div>
   );
 }
 
-// Glass Card with spotlight effect
-function GlassCard({ 
-  children, 
-  delay = 0,
-  href 
-}: { 
-  children: React.ReactNode; 
-  delay?: number;
-  href?: string;
-}) {
-  const cardRef = useRef<HTMLDivElement>(null);
+function MixedShellCard() {
+  const [message, setMessage] = useState('');
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 100;
-    const y = ((e.clientY - rect.top) / rect.height) * 100;
-    cardRef.current.style.setProperty('--mouse-x', `${x}%`);
-    cardRef.current.style.setProperty('--mouse-y', `${y}%`);
-  };
+  return (
+    <div className="glass-card">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-title">Chat Shell</h2>
+        <LEDIndicator label="agent" />
+      </div>
 
-  const content = (
-    <motion.div
-      ref={cardRef}
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ 
-        delay, 
-        duration: 0.4, 
-        ease: [0.16, 1, 0.3, 1] 
-      }}
-      className="glass-card"
-      onMouseMove={handleMouseMove}
-    >
-      {children}
-    </motion.div>
+      <div className="flex gap-4">
+        {/* Chat Area */}
+        <div className="flex-1 flex flex-col gap-3">
+          <div className="bubble bubble-user">
+            Show me the run plan and export artifacts.
+          </div>
+          <div className="bubble bubble-assistant">
+            Running tools… opening Terminal + preparing export.
+          </div>
+          
+          <div className="mt-auto flex gap-3">
+            <input 
+              type="text"
+              placeholder="Message"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              className="input-glass flex-1"
+            />
+            <button className="btn-glass">Send</button>
+          </div>
+        </div>
+
+        {/* Mini Inspector */}
+        <div className="w-44">
+          <p className="text-label mb-3">Inspector</p>
+          <div className="space-y-2">
+            <span className="chip chip-dark block text-center">Files: scoped</span>
+            <span className="chip chip-dark block text-center">Terminal: allowlist</span>
+            <span className="chip chip-dark block text-center">Export: ready</span>
+          </div>
+        </div>
+      </div>
+    </div>
   );
+}
 
-  if (href) {
-    return (
-      <a href={href} target="_blank" rel="noopener noreferrer" className="block">
-        {content}
-      </a>
-    );
-  }
+function ActivityCard() {
+  const activities = [
+    { time: "2m ago", action: "Agent completed repo2pr", status: "success" },
+    { time: "5m ago", action: "Export triggered", status: "info" },
+    { time: "12m ago", action: "Test suite passed", status: "success" },
+    { time: "1h ago", action: "Memory snapshot saved", status: "info" },
+  ];
 
-  return content;
+  return (
+    <div className="glass-card h-full">
+      <h2 className="text-title mb-4">Activity</h2>
+      <div className="space-y-3">
+        {activities.map((a, i) => (
+          <div key={i} className="flex items-center gap-3">
+            <div 
+              className="w-2 h-2 rounded-full"
+              style={{ 
+                background: a.status === 'success' ? 'var(--accent-green)' : 'var(--accent-blue)',
+                boxShadow: a.status === 'success' 
+                  ? '0 0 8px rgba(34, 197, 94, 0.5)' 
+                  : '0 0 8px rgba(59, 130, 246, 0.5)'
+              }}
+            />
+            <div className="flex-1">
+              <p className="text-sm font-medium" style={{ color: 'var(--aaa-fg)' }}>{a.action}</p>
+              <p className="text-xs" style={{ color: 'var(--aaa-muted)' }}>{a.time}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function QuickActionsCard() {
+  const actions = [
+    { icon: "🚀", label: "Deploy" },
+    { icon: "🔍", label: "Search" },
+    { icon: "📦", label: "Export" },
+    { icon: "⚙️", label: "Settings" },
+  ];
+
+  return (
+    <div className="glass-card">
+      <h2 className="text-title mb-4">Quick Actions</h2>
+      <div className="grid grid-cols-2 gap-3">
+        {actions.map((a) => (
+          <motion.button
+            key={a.label}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.98 }}
+            className="btn-glass flex flex-col items-center gap-2 py-4"
+          >
+            <span className="text-2xl">{a.icon}</span>
+            <span className="text-sm">{a.label}</span>
+          </motion.button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function MemoryGraphCard() {
+  // Fake graph bars
+  const bars = [40, 65, 80, 55, 90, 70, 85, 60, 75, 95, 50, 88];
+
+  return (
+    <div className="glass-card">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-title">Memory Usage</h2>
+        <div className="flex items-center gap-3">
+          <span className="text-2xl font-bold" style={{ 
+            color: 'var(--aaa-fg)',
+            textShadow: '0 0 30px rgba(6, 182, 212, 0.5)'
+          }}>2.4 GB</span>
+          <span className="chip chip-dark">/ 8 GB</span>
+        </div>
+      </div>
+
+      {/* Graph */}
+      <div className="flex items-end gap-2 h-32">
+        {bars.map((h, i) => (
+          <motion.div
+            key={i}
+            initial={{ height: 0 }}
+            animate={{ height: `${h}%` }}
+            transition={{ delay: 0.6 + i * 0.05, duration: 0.5 }}
+            className="flex-1 rounded-t-md"
+            style={{
+              background: `linear-gradient(180deg, rgba(6, 182, 212, 0.8), rgba(6, 182, 212, 0.3))`,
+              boxShadow: '0 0 20px rgba(6, 182, 212, 0.3)',
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  );
 }
