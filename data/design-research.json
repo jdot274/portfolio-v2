@@ -1,0 +1,193 @@
+{
+  "research": [
+    {
+      "id": "nextchat-design-system",
+      "title": "NextChat (ChatGPT Clone) - 86.8k Stars",
+      "type": "document",
+      "category": "Design Systems",
+      "source": "https://github.com/ChatGPTNextWeb/NextChat",
+      "tags": ["chatgpt", "dark-mode", "css", "design-tokens"],
+      "content": {
+        "darkMode": {
+          "--white": "rgb(30, 30, 30)",
+          "--black": "rgb(187, 187, 187)",
+          "--gray": "rgb(21, 21, 21)",
+          "--primary": "rgb(29, 147, 171)",
+          "--second": "rgb(27, 38, 42)",
+          "--hover-color": "#323232",
+          "--bar-color": "rgba(255, 255, 255, 0.1)",
+          "--border-in-light": "1px solid rgba(255, 255, 255, 0.192)"
+        },
+        "lightMode": {
+          "--white": "white",
+          "--black": "rgb(48, 48, 48)",
+          "--gray": "rgb(250, 250, 250)",
+          "--primary": "rgb(29, 147, 171)",
+          "--second": "rgb(231, 248, 255)",
+          "--hover-color": "#f3f3f3",
+          "--bar-color": "rgba(0, 0, 0, 0.1)"
+        },
+        "fonts": "Noto Sans, SF Pro SC, SF Pro Text, SF Pro Icons, PingFang SC, Helvetica Neue, Helvetica, Arial, sans-serif",
+        "shadows": {
+          "--shadow": "50px 50px 100px 10px rgb(0, 0, 0, 0.1)",
+          "--card-shadow": "0px 2px 4px 0px rgb(0, 0, 0, 0.05)"
+        }
+      }
+    },
+    {
+      "id": "vercel-geist-design",
+      "title": "Vercel Geist Design System",
+      "type": "document",
+      "category": "Design Systems",
+      "source": "https://vercel.com/geist",
+      "tags": ["vercel", "geist", "professional", "dark-mode"],
+      "content": {
+        "description": "Vercel's official design system for building consistent web experiences",
+        "features": [
+          "10 color scales with P3 color support",
+          "Gray scale with 10 shades",
+          "Gray alpha for transparency",
+          "Background colors",
+          "Semantic colors (success, warning, error)",
+          "Icon set tailored for developer tools"
+        ],
+        "font": "Geist Sans, Geist Mono"
+      }
+    },
+    {
+      "id": "shadcn-ui-system",
+      "title": "shadcn/ui Design System - 103k Stars",
+      "type": "document",
+      "category": "Design Systems",
+      "source": "https://ui.shadcn.com",
+      "tags": ["shadcn", "radix", "tailwind", "components"],
+      "content": {
+        "colorSystem": "HSL-based CSS variables",
+        "variables": {
+          "--background": "hsl(var(--background))",
+          "--foreground": "hsl(var(--foreground))",
+          "--primary": "hsl(var(--primary))",
+          "--secondary": "hsl(var(--secondary))",
+          "--muted": "hsl(var(--muted))",
+          "--accent": "hsl(var(--accent))",
+          "--destructive": "hsl(var(--destructive))",
+          "--border": "hsl(var(--border))",
+          "--input": "hsl(var(--input))",
+          "--ring": "hsl(var(--ring))"
+        },
+        "borderRadius": {
+          "lg": "var(--radius)",
+          "md": "calc(var(--radius) - 2px)",
+          "sm": "calc(var(--radius) - 4px)"
+        }
+      }
+    },
+    {
+      "id": "linear-app-design",
+      "title": "Linear App Design",
+      "type": "document",
+      "category": "Design Systems",
+      "source": "https://linear.app",
+      "tags": ["linear", "saas", "professional", "dark-mode"],
+      "content": {
+        "description": "Purpose-built tool for planning and building products",
+        "characteristics": [
+          "Pure black background (#000000)",
+          "Clean white typography",
+          "Minimal accent colors",
+          "Subtle gradient overlays",
+          "High contrast design",
+          "Precise spacing system"
+        ]
+      }
+    },
+    {
+      "id": "v0-vercel-design",
+      "title": "v0 by Vercel Design",
+      "type": "document",
+      "category": "Design Systems",
+      "source": "https://v0.dev",
+      "tags": ["v0", "vercel", "ai", "generative-ui"],
+      "content": {
+        "description": "AI-powered generative UI tool",
+        "characteristics": [
+          "Dark charcoal background",
+          "Subtle border accents",
+          "Rounded input fields with borders",
+          "Pill-shaped action buttons",
+          "Clean sans-serif typography",
+          "Minimal iconography"
+        ]
+      }
+    },
+    {
+      "id": "figma-ui-kits",
+      "title": "Figma Community UI Kits",
+      "type": "document",
+      "category": "Design Resources",
+      "source": "https://figma.com/community",
+      "tags": ["figma", "ui-kit", "design-resources"],
+      "content": {
+        "chatgptKits": [
+          {
+            "name": "ChatGPT 5 Web: Free UI Kit",
+            "components": "290+",
+            "screens": 18,
+            "features": ["Loading animations", "Light & Dark Mode"]
+          },
+          {
+            "name": "ChatGPT Redesign with ShadCN/UI",
+            "users": 950
+          },
+          {
+            "name": "AI Smart Chat UI Kit",
+            "users": "10.6k",
+            "likes": 135
+          }
+        ],
+        "dashboardKits": [
+          {
+            "name": "Dashboard - Dark And Light",
+            "users": "6.9k"
+          }
+        ]
+      }
+    },
+    {
+      "id": "chatbot-ui-design",
+      "title": "Chatbot UI by McKay Wrigley - 32.8k Stars",
+      "type": "document",
+      "category": "Design Systems",
+      "source": "https://github.com/mckaywrigley/chatbot-ui",
+      "tags": ["chatbot", "ai", "open-source"],
+      "content": {
+        "description": "AI chat for any model",
+        "techStack": ["React", "Next.js", "Tailwind CSS", "Tauri"],
+        "aiSupport": ["ChatGPT", "Claude", "Gemini", "Ollama", "Groq"]
+      }
+    }
+  ],
+  "colorPalettes": {
+    "greySilverLayered": {
+      "name": "Grey Silver Layered",
+      "description": "Professional grey/silver palette with depth layers",
+      "colors": {
+        "base": "#0a0a0a",
+        "layer1": "#111111",
+        "layer2": "#1a1a1a",
+        "layer3": "#242424",
+        "layer4": "#2e2e2e",
+        "surface": "#171717",
+        "surfaceHover": "#1f1f1f",
+        "border": "rgba(255, 255, 255, 0.08)",
+        "borderSubtle": "rgba(255, 255, 255, 0.04)",
+        "text": "#fafafa",
+        "textMuted": "#a1a1aa",
+        "textSubtle": "#71717a",
+        "accent": "#3b82f6",
+        "accentMuted": "rgba(59, 130, 246, 0.15)"
+      }
+    }
+  }
+}
+
