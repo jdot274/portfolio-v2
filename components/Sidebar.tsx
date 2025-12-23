@@ -1,17 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { 
-  FolderOpen, Search, Grid, List, LayoutGrid, Settings, 
-  Plus, ChevronRight, Github, FileCode, Tag, Sparkles,
-  Kanban, LayoutDashboard, Globe, Image, Link2, FileText,
-  Palette
-} from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useContentStore } from '@/stores/content-store';
-import { useThemeStore } from '@/stores/theme-store';
 import { ContentType } from '@/types';
-import { ThemeSwitcher } from './ThemeSwitcher';
 
 export type ViewMode = 'grid' | 'list' | 'canvas' | 'board' | 'dashboard';
 
@@ -21,22 +13,8 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ viewMode, onViewModeChange }: SidebarProps) {
-  const { 
-    activeFilter, 
-    setActiveFilter,
-    getAllTags,
-    items,
-  } = useContentStore();
-  
-  const { currentTheme, getTheme } = useThemeStore();
-  const theme = getTheme();
-  
-  const [expandedSections, setExpandedSections] = useState({
-    folders: true,
-    tags: true,
-  });
-
-  // Theme is applied by ThemeProvider - no need to apply here
+  const { activeFilter, setActiveFilter, getAllTags, items } = useContentStore();
+  const [expandedSections, setExpandedSections] = useState({ folders: true, tags: false });
 
   const allTags = getAllTags();
 
@@ -45,13 +23,11 @@ export default function Sidebar({ viewMode, onViewModeChange }: SidebarProps) {
   };
 
   const folders = [
-    { id: 'all', name: 'All Items', icon: '📚', types: undefined },
+    { id: 'all', name: 'All Docs', icon: '📚', types: undefined },
     { id: 'projects', name: 'Projects', icon: '📂', types: ['repo'] as ContentType[] },
     { id: 'webapps', name: 'Web Apps', icon: '🌐', types: ['webapp', 'website'] as ContentType[] },
     { id: 'snippets', name: 'Snippets', icon: '💻', types: ['snippet', 'gist'] as ContentType[] },
     { id: 'documents', name: 'Documents', icon: '📄', types: ['document', 'markdown'] as ContentType[] },
-    { id: 'media', name: 'Media', icon: '🖼️', types: ['image', 'video'] as ContentType[] },
-    { id: 'links', name: 'Links', icon: '🔗', types: ['link'] as ContentType[] },
   ];
 
   const getItemCount = (types?: ContentType[]) => {
@@ -60,158 +36,193 @@ export default function Sidebar({ viewMode, onViewModeChange }: SidebarProps) {
   };
 
   const views = [
-    { id: 'dashboard' as ViewMode, icon: <LayoutDashboard size={14} />, label: 'Dashboard' },
-    { id: 'grid' as ViewMode, icon: <Grid size={14} />, label: 'Grid' },
-    { id: 'list' as ViewMode, icon: <List size={14} />, label: 'List' },
-    { id: 'canvas' as ViewMode, icon: <LayoutGrid size={14} />, label: 'Canvas' },
-    { id: 'board' as ViewMode, icon: <Kanban size={14} />, label: 'Board' },
+    { id: 'dashboard' as ViewMode, label: 'Dashboard' },
+    { id: 'grid' as ViewMode, label: 'Grid' },
+    { id: 'list' as ViewMode, label: 'List' },
+    { id: 'canvas' as ViewMode, label: 'Canvas' },
+    { id: 'board' as ViewMode, label: 'Board' },
   ];
 
   return (
-    <aside className="w-64 h-full bg-[var(--color-layer1)] border-r border-[var(--color-border)] flex flex-col">
-      {/* Header */}
-      <div className="p-4 border-b border-[var(--color-border)]">
-        <div className="flex items-center gap-2">
+    <aside 
+      className="w-64 h-full flex flex-col"
+      style={{ 
+        background: 'var(--color-layer1)',
+        borderRight: '1px solid var(--color-border)'
+      }}
+    >
+      {/* Logo */}
+      <div className="p-5 pb-4">
+        <div className="flex items-center gap-3">
           <div 
             className="w-8 h-8 rounded-lg flex items-center justify-center"
-            style={{ background: `linear-gradient(135deg, ${theme.colors.accent}, ${theme.colors.info})` }}
+            style={{ 
+              background: 'linear-gradient(135deg, var(--color-accent), #6366f1)',
+              boxShadow: '0 0 20px var(--color-accent-glow)'
+            }}
           >
-            <Sparkles size={16} className="text-white" />
+            <span className="text-white text-sm font-semibold">P</span>
           </div>
           <div>
-            <h1 className="font-semibold text-[var(--color-text)]">Portfolio V2</h1>
-            <p className="text-xs text-[var(--color-text-subtle)]">Knowledge Hub</p>
+            <h1 className="font-semibold text-sm" style={{ color: 'var(--color-text)' }}>
+              Portfolio
+            </h1>
+            <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
+              Knowledge Hub
+            </p>
           </div>
         </div>
       </div>
 
-      {/* View mode toggle */}
-      <div className="p-3 border-b border-[var(--color-border)]">
-        <div className="grid grid-cols-5 bg-[var(--color-base)] rounded-lg p-1 gap-0.5">
+      {/* View Mode */}
+      <div className="px-3 pb-3">
+        <div 
+          className="p-1 rounded-lg flex gap-0.5"
+          style={{ background: 'var(--color-base)' }}
+        >
           {views.map((view) => (
             <button
               key={view.id}
               onClick={() => onViewModeChange(view.id)}
-              title={view.label}
-              className={`flex items-center justify-center py-2 rounded-md text-xs transition-all duration-200 ${
-                viewMode === view.id 
-                  ? 'bg-[var(--color-layer3)] text-[var(--color-text)] shadow-sm' 
-                  : 'text-[var(--color-text-subtle)] hover:text-[var(--color-text-muted)] hover:bg-[var(--color-layer2)]'
-              }`}
+              className="flex-1 py-1.5 px-2 rounded-md text-xs font-medium transition-all duration-200"
+              style={{
+                background: viewMode === view.id ? 'var(--color-surface-active)' : 'transparent',
+                color: viewMode === view.id ? 'var(--color-text)' : 'var(--color-text-muted)',
+              }}
             >
-              {view.icon}
+              {view.label}
             </button>
           ))}
         </div>
-        <div className="text-center mt-1">
-          <span className="text-[10px] text-[var(--color-text-subtle)]">
-            {views.find(v => v.id === viewMode)?.label} View
-          </span>
-        </div>
       </div>
 
-      {/* Scrollable content */}
-      <div className="flex-1 overflow-y-auto">
-        {/* Smart Folders */}
-        <div className="p-3">
+      {/* Folders */}
+      <div className="flex-1 overflow-y-auto px-3">
+        <div className="py-2">
           <button
             onClick={() => toggleSection('folders')}
-            className="flex items-center justify-between w-full text-xs font-medium text-[var(--color-text-subtle)] uppercase tracking-wider mb-2"
+            className="flex items-center justify-between w-full px-2 py-1 text-xs font-medium uppercase tracking-wider"
+            style={{ color: 'var(--color-text-muted)' }}
           >
-            <span>Smart Folders</span>
-            <ChevronRight 
-              size={14} 
-              className={`transition-transform duration-200 ${expandedSections.folders ? 'rotate-90' : ''}`} 
-            />
+            <span>Folders</span>
+            <svg 
+              className={`w-3 h-3 transition-transform duration-200 ${expandedSections.folders ? 'rotate-90' : ''}`}
+              fill="currentColor" 
+              viewBox="0 0 20 20"
+            >
+              <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+            </svg>
           </button>
+          
           <AnimatePresence>
             {expandedSections.folders && (
               <motion.div
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: 'auto', opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
-                className="space-y-0.5 overflow-hidden"
+                transition={{ duration: 0.2 }}
+                className="overflow-hidden"
               >
-                {folders.map((folder) => (
-                  <button
-                    key={folder.id}
-                    onClick={() => setActiveFilter({ 
-                      type: folder.types?.[0],
-                      folder: folder.id 
-                    })}
-                    className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-sm transition-all duration-200 ${
-                      activeFilter.folder === folder.id
-                        ? 'bg-[var(--color-surface)] text-[var(--color-text)] border border-[var(--color-border-strong)]'
-                        : 'text-[var(--color-text-muted)] hover:bg-[var(--color-surface)] hover:text-[var(--color-text)] border border-transparent'
-                    }`}
-                  >
-                    <span>{folder.icon}</span>
-                    <span className="flex-1 text-left">{folder.name}</span>
-                    <span className="text-xs text-[var(--color-text-subtle)]">{getItemCount(folder.types)}</span>
-                  </button>
-                ))}
+                <div className="py-1 space-y-0.5">
+                  {folders.map((folder) => {
+                    const isActive = activeFilter.folder === folder.id || (folder.id === 'all' && !activeFilter.folder);
+                    return (
+                      <button
+                        key={folder.id}
+                        onClick={() => setActiveFilter({ type: folder.types?.[0], folder: folder.id })}
+                        className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm transition-all duration-150"
+                        style={{
+                          background: isActive ? 'var(--color-surface-active)' : 'transparent',
+                          color: isActive ? 'var(--color-text)' : 'var(--color-text-secondary)',
+                        }}
+                      >
+                        <span className="text-base">{folder.icon}</span>
+                        <span className="flex-1 text-left">{folder.name}</span>
+                        <span 
+                          className="text-xs tabular-nums"
+                          style={{ color: 'var(--color-text-muted)' }}
+                        >
+                          {getItemCount(folder.types)}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
         </div>
 
         {/* Tags */}
-        <div className="p-3 border-t border-[var(--color-border)]">
+        <div className="py-2" style={{ borderTop: '1px solid var(--color-border-subtle)' }}>
           <button
             onClick={() => toggleSection('tags')}
-            className="flex items-center justify-between w-full text-xs font-medium text-[var(--color-text-subtle)] uppercase tracking-wider mb-2"
+            className="flex items-center justify-between w-full px-2 py-1 text-xs font-medium uppercase tracking-wider"
+            style={{ color: 'var(--color-text-muted)' }}
           >
-            <span>Tags ({allTags.length})</span>
-            <ChevronRight 
-              size={14} 
-              className={`transition-transform duration-200 ${expandedSections.tags ? 'rotate-90' : ''}`} 
-            />
+            <span>Tags</span>
+            <div className="flex items-center gap-2">
+              <span className="text-xs" style={{ color: 'var(--color-text-subtle)' }}>
+                {allTags.length}
+              </span>
+              <svg 
+                className={`w-3 h-3 transition-transform duration-200 ${expandedSections.tags ? 'rotate-90' : ''}`}
+                fill="currentColor" 
+                viewBox="0 0 20 20"
+              >
+                <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+              </svg>
+            </div>
           </button>
+          
           <AnimatePresence>
             {expandedSections.tags && (
               <motion.div
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: 'auto', opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
-                className="flex flex-wrap gap-1.5 overflow-hidden"
+                transition={{ duration: 0.2 }}
+                className="overflow-hidden"
               >
-                {allTags.slice(0, 20).map((tag) => (
-                  <button
-                    key={tag.id}
-                    onClick={() => setActiveFilter({ tags: [tag.id] })}
-                    className="text-xs px-2 py-1 rounded-full transition-all duration-200 hover:scale-105"
-                    style={{ 
-                      backgroundColor: `${tag.color}20`, 
-                      color: tag.color,
-                      border: activeFilter.tags?.includes(tag.id) ? `1px solid ${tag.color}` : '1px solid transparent'
-                    }}
-                  >
-                    {tag.name}
-                  </button>
-                ))}
-                {allTags.length > 20 && (
-                  <span className="text-xs px-2 py-1 text-[var(--color-text-subtle)]">
-                    +{allTags.length - 20} more
-                  </span>
-                )}
+                <div className="py-2 flex flex-wrap gap-1.5">
+                  {allTags.slice(0, 12).map((tag) => (
+                    <button
+                      key={tag.id}
+                      onClick={() => setActiveFilter({ tags: [tag.id] })}
+                      className="text-xs px-2 py-1 rounded-md transition-all duration-150"
+                      style={{
+                        background: 'var(--color-surface)',
+                        color: 'var(--color-text-secondary)',
+                        border: '1px solid var(--color-border-subtle)'
+                      }}
+                    >
+                      {tag.name}
+                    </button>
+                  ))}
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
         </div>
       </div>
 
-      {/* Footer with Theme Switcher */}
-      <div className="p-3 border-t border-[var(--color-border)] space-y-2">
-        {/* Theme Switcher */}
-        <div className="flex items-center gap-2">
-          <Palette size={16} className="text-[var(--color-text-subtle)]" />
-          <span className="text-sm text-[var(--color-text-muted)] flex-1">Theme</span>
-          <ThemeSwitcher />
-        </div>
-        
-        {/* Settings */}
-        <button className="w-full flex items-center gap-2 px-3 py-2 rounded-lg bg-[var(--color-surface)] hover:bg-[var(--color-surface-hover)] border border-[var(--color-border)] text-[var(--color-text-muted)] text-sm transition-all duration-200">
-          <Settings size={16} />
+      {/* Footer */}
+      <div 
+        className="p-3"
+        style={{ borderTop: '1px solid var(--color-border-subtle)' }}
+      >
+        <button 
+          className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all duration-150"
+          style={{
+            background: 'var(--color-surface)',
+            color: 'var(--color-text-secondary)',
+            border: '1px solid var(--color-border-subtle)'
+          }}
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
           Settings
         </button>
       </div>

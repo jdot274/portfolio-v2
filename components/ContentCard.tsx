@@ -29,33 +29,46 @@ export default function ContentCard({ item, onEdit, onDelete }: ContentCardProps
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="group bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden hover:border-zinc-700 transition-all"
+      className="group rounded-xl overflow-hidden transition-all"
+      style={{ 
+        backgroundColor: 'var(--color-surface)',
+        border: '1px solid var(--color-border)'
+      }}
     >
       {/* Header */}
       <div className="p-4">
         <div className="flex items-start justify-between mb-2">
           <div className="flex items-center gap-2">
             <span className="text-lg">{getContentTypeIcon(item.type)}</span>
-            <h3 className="font-medium text-white truncate">{item.title}</h3>
+            <h3 className="font-medium truncate" style={{ color: 'var(--color-text)' }}>{item.title}</h3>
           </div>
           <div className="relative">
             <button
               onClick={() => setShowMenu(!showMenu)}
-              className="p-1 rounded hover:bg-zinc-800 text-zinc-500 opacity-0 group-hover:opacity-100 transition-opacity"
+              className="p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity"
+              style={{ color: 'var(--color-text-muted)' }}
             >
               <MoreVertical size={16} />
             </button>
             {showMenu && (
-              <div className="absolute right-0 top-8 bg-zinc-800 border border-zinc-700 rounded-lg shadow-xl py-1 z-10 min-w-[120px]">
+              <div 
+                className="absolute right-0 top-8 rounded-lg shadow-xl py-1 z-10 min-w-[120px]"
+                style={{ 
+                  backgroundColor: 'var(--color-layer3)',
+                  border: '1px solid var(--color-border-strong)'
+                }}
+              >
                 <button
                   onClick={() => { onEdit?.(item); setShowMenu(false); }}
-                  className="flex items-center gap-2 w-full px-3 py-2 text-sm text-zinc-300 hover:bg-zinc-700"
+                  className="flex items-center gap-2 w-full px-3 py-2 text-sm transition-colors"
+                  style={{ color: 'var(--color-text-muted)' }}
                 >
                   <Edit size={14} /> Edit
                 </button>
                 <button
                   onClick={() => { onDelete?.(item.id); setShowMenu(false); }}
-                  className="flex items-center gap-2 w-full px-3 py-2 text-sm text-red-400 hover:bg-zinc-700"
+                  className="flex items-center gap-2 w-full px-3 py-2 text-sm transition-colors"
+                  style={{ color: 'var(--color-error)' }}
                 >
                   <Trash2 size={14} /> Delete
                 </button>
@@ -65,7 +78,7 @@ export default function ContentCard({ item, onEdit, onDelete }: ContentCardProps
         </div>
 
         {item.description && (
-          <p className="text-sm text-zinc-400 line-clamp-2 mb-3">
+          <p className="text-sm line-clamp-2 mb-3" style={{ color: 'var(--color-text-muted)' }}>
             {item.description}
           </p>
         )}
@@ -83,7 +96,10 @@ export default function ContentCard({ item, onEdit, onDelete }: ContentCardProps
             </span>
           ))}
           {item.tags.length > 4 && (
-            <span className="text-xs px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-500">
+            <span 
+              className="text-xs px-2 py-0.5 rounded-full"
+              style={{ backgroundColor: 'var(--color-layer3)', color: 'var(--color-text-muted)' }}
+            >
               +{item.tags.length - 4}
             </span>
           )}
@@ -91,7 +107,7 @@ export default function ContentCard({ item, onEdit, onDelete }: ContentCardProps
 
         {/* GitHub stats */}
         {item.github && (
-          <div className="flex items-center gap-4 text-xs text-zinc-500 mb-3">
+          <div className="flex items-center gap-4 text-xs mb-3" style={{ color: 'var(--color-text-muted)' }}>
             {item.github.stars !== undefined && item.github.stars > 0 && (
               <span className="flex items-center gap-1">
                 <Star size={12} /> {item.github.stars}
@@ -110,8 +126,11 @@ export default function ContentCard({ item, onEdit, onDelete }: ContentCardProps
         )}
 
         {/* Footer */}
-        <div className="flex items-center justify-between pt-3 border-t border-zinc-800">
-          <div className="flex items-center gap-2 text-xs text-zinc-500">
+        <div 
+          className="flex items-center justify-between pt-3"
+          style={{ borderTop: '1px solid var(--color-border)' }}
+        >
+          <div className="flex items-center gap-2 text-xs" style={{ color: 'var(--color-text-muted)' }}>
             <span>{getStorageIcon(item.storageLocation)}</span>
             <span>{formatDate(item.updatedAt)}</span>
           </div>
@@ -120,7 +139,8 @@ export default function ContentCard({ item, onEdit, onDelete }: ContentCardProps
               href={item.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1 text-xs text-emerald-500 hover:text-emerald-400"
+              className="flex items-center gap-1 text-xs transition-colors"
+              style={{ color: 'var(--color-accent)' }}
             >
               <ExternalLink size={12} />
               Open
@@ -143,4 +163,3 @@ function getLanguageColor(language: string): string {
   };
   return colors[language] || '#6b7280';
 }
-

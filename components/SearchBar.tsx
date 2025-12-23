@@ -56,15 +56,14 @@ export default function SearchBar() {
   return (
     <div className="relative">
       <div
-        className={`
-          flex items-center gap-2 px-4 py-2.5 rounded-xl border transition-all
-          ${isFocused 
-            ? 'bg-zinc-900 border-zinc-700 shadow-lg' 
-            : 'bg-zinc-900/50 border-zinc-800 hover:border-zinc-700'
-          }
-        `}
+        className="flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all"
+        style={{
+          backgroundColor: isFocused ? 'var(--color-surface)' : 'var(--color-surface)',
+          border: `1px solid ${isFocused ? 'var(--color-border-strong)' : 'var(--color-border)'}`,
+          boxShadow: isFocused ? '0 4px 20px rgba(0,0,0,0.3)' : 'none'
+        }}
       >
-        <Search size={18} className="text-zinc-500" />
+        <Search size={18} style={{ color: 'var(--color-text-muted)' }} />
         <input
           ref={inputRef}
           type="text"
@@ -73,17 +72,18 @@ export default function SearchBar() {
           onFocus={() => setIsFocused(true)}
           onBlur={() => setTimeout(() => setIsFocused(false), 200)}
           placeholder="Search everything..."
-          className="flex-1 bg-transparent text-white placeholder-zinc-500 outline-none text-sm"
+          className="flex-1 bg-transparent outline-none text-sm"
+          style={{ color: 'var(--color-text)' }}
         />
         
         {/* Type filter button */}
         <button
           onClick={() => setShowFilters(!showFilters)}
-          className={`p-1.5 rounded-lg transition-colors ${
-            activeFilter.type 
-              ? 'bg-emerald-500/20 text-emerald-500' 
-              : 'hover:bg-zinc-800 text-zinc-500'
-          }`}
+          className="p-1.5 rounded-lg transition-colors"
+          style={{
+            backgroundColor: activeFilter.type ? 'var(--color-accent-muted)' : 'transparent',
+            color: activeFilter.type ? 'var(--color-accent)' : 'var(--color-text-muted)'
+          }}
         >
           <Filter size={16} />
         </button>
@@ -92,7 +92,8 @@ export default function SearchBar() {
         {hasActiveFilters && (
           <button
             onClick={clearFilters}
-            className="p-1.5 rounded-lg hover:bg-zinc-800 text-zinc-500"
+            className="p-1.5 rounded-lg transition-colors"
+            style={{ color: 'var(--color-text-muted)' }}
           >
             <X size={16} />
           </button>
@@ -100,7 +101,7 @@ export default function SearchBar() {
 
         {/* Keyboard hint */}
         {!isFocused && (
-          <div className="flex items-center gap-1 text-xs text-zinc-600">
+          <div className="flex items-center gap-1 text-xs" style={{ color: 'var(--color-text-subtle)' }}>
             <Command size={12} />
             <span>K</span>
           </div>
@@ -110,11 +111,14 @@ export default function SearchBar() {
       {/* Active filters display */}
       {activeFilter.type && (
         <div className="flex items-center gap-2 mt-2">
-          <span className="text-xs text-zinc-500">Filtering:</span>
-          <span className="flex items-center gap-1 text-xs px-2 py-1 rounded-full bg-emerald-500/20 text-emerald-500">
+          <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Filtering:</span>
+          <span 
+            className="flex items-center gap-1 text-xs px-2 py-1 rounded-full"
+            style={{ backgroundColor: 'var(--color-accent-muted)', color: 'var(--color-accent)' }}
+          >
             {getContentTypeIcon(activeFilter.type)}
             {CONTENT_TYPES.find(t => t.type === activeFilter.type)?.label}
-            <button onClick={() => handleTypeFilter(undefined)} className="ml-1 hover:text-white">
+            <button onClick={() => handleTypeFilter(undefined)} className="ml-1">
               <X size={12} />
             </button>
           </span>
@@ -128,18 +132,22 @@ export default function SearchBar() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="absolute top-full left-0 right-0 mt-2 bg-zinc-900 border border-zinc-800 rounded-xl shadow-xl overflow-hidden z-50"
+            className="absolute top-full left-0 right-0 mt-2 rounded-xl shadow-xl overflow-hidden z-50"
+            style={{
+              backgroundColor: 'var(--color-surface)',
+              border: '1px solid var(--color-border)'
+            }}
           >
             <div className="p-2">
-              <p className="text-xs text-zinc-500 px-2 py-1 uppercase tracking-wider">Filter by type</p>
+              <p className="text-xs px-2 py-1 uppercase tracking-wider" style={{ color: 'var(--color-text-muted)' }}>Filter by type</p>
               <div className="grid grid-cols-2 gap-1 mt-1">
                 <button
                   onClick={() => handleTypeFilter(undefined)}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors ${
-                    !activeFilter.type 
-                      ? 'bg-emerald-500/20 text-emerald-500' 
-                      : 'text-zinc-400 hover:bg-zinc-800'
-                  }`}
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors"
+                  style={{
+                    backgroundColor: !activeFilter.type ? 'var(--color-accent-muted)' : 'transparent',
+                    color: !activeFilter.type ? 'var(--color-accent)' : 'var(--color-text-muted)'
+                  }}
                 >
                   📚 All ({items.length})
                 </button>
@@ -149,11 +157,11 @@ export default function SearchBar() {
                     <button
                       key={type}
                       onClick={() => handleTypeFilter(type)}
-                      className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors ${
-                        activeFilter.type === type 
-                          ? 'bg-emerald-500/20 text-emerald-500' 
-                          : 'text-zinc-400 hover:bg-zinc-800'
-                      }`}
+                      className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors"
+                      style={{
+                        backgroundColor: activeFilter.type === type ? 'var(--color-accent-muted)' : 'transparent',
+                        color: activeFilter.type === type ? 'var(--color-accent)' : 'var(--color-text-muted)'
+                      }}
                     >
                       {getContentTypeIcon(type)} {label} ({count})
                     </button>
@@ -167,4 +175,3 @@ export default function SearchBar() {
     </div>
   );
 }
-

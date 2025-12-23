@@ -1,13 +1,30 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useThemeStore } from '@/stores/theme-store';
 import { themes } from '@/lib/themes';
 
 export function ThemeSwitcher() {
   const [isOpen, setIsOpen] = useState(false);
-  const { currentTheme, setTheme, getAllThemes } = useThemeStore();
-  const allThemes = getAllThemes();
+  const currentTheme = useThemeStore((state) => state.currentTheme);
+  const setTheme = useThemeStore((state) => state.setTheme);
+  const allThemes = Object.values(themes);
+  
+  // Force re-render when theme changes
+  const [, forceUpdate] = useState({});
+  
+  useEffect(() => {
+    const unsubscribe = useThemeStore.subscribe((state) => {
+      forceUpdate({});
+    });
+    return unsubscribe;
+  }, []);
+
+  const handleThemeSelect = (themeId: string) => {
+    console.log('ThemeSwitcher: selecting theme', themeId);
+    setTheme(themeId);
+    setIsOpen(false);
+  };
 
   return (
     <div className="relative">
@@ -58,10 +75,7 @@ export function ThemeSwitcher() {
               {allThemes.map((theme) => (
                 <button
                   key={theme.id}
-                  onClick={() => {
-                    setTheme(theme.id);
-                    setIsOpen(false);
-                  }}
+                  onClick={() => handleThemeSelect(theme.id)}
                   className={`w-full flex items-start gap-3 p-3 rounded-lg
                              transition-all duration-200
                              ${currentTheme === theme.id 
@@ -122,4 +136,3 @@ export function ThemeSwitcher() {
     </div>
   );
 }
-
