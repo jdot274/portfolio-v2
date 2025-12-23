@@ -133,7 +133,7 @@ function StatCard({
     purple: { bg: "rgba(139, 92, 246, 0.15)", border: "rgba(139, 92, 246, 0.3)", glow: "rgba(139, 92, 246, 0.5)", line: "rgba(139, 92, 246, 0.6)" },
     cyan: { bg: "rgba(6, 182, 212, 0.15)", border: "rgba(6, 182, 212, 0.3)", glow: "rgba(6, 182, 212, 0.5)", line: "rgba(6, 182, 212, 0.6)" },
   };
-  const c = colors[color];
+  const colorTheme = colors[color];
 
   return (
     <motion.div
@@ -143,24 +143,24 @@ function StatCard({
       whileHover={{ scale: 1.02, y: -4 }}
       className="relative p-6 rounded-[20px] overflow-hidden cursor-pointer"
       style={{ 
-        background: `linear-gradient(135deg, ${c.bg}, rgba(255,255,255,0.02))`,
-        border: `1px solid ${c.border}`,
+        background: `linear-gradient(135deg, ${colorTheme.bg}, rgba(255,255,255,0.02))`,
+        border: `1px solid ${colorTheme.border}`,
       }}
     >
       {/* Top glow line */}
       <div 
         className="absolute top-0 left-0 right-0 h-[1px]"
-        style={{ background: `linear-gradient(90deg, transparent, ${c.line}, transparent)` }}
+        style={{ background: `linear-gradient(90deg, transparent, ${colorTheme.line}, transparent)` }}
       />
       {/* Radial glow */}
       <div 
         className="absolute inset-0 pointer-events-none"
-        style={{ background: `radial-gradient(circle at 50% 0%, ${c.bg}, transparent 70%)` }}
+        style={{ background: `radial-gradient(circle at 50% 0%, ${colorTheme.bg}, transparent 70%)` }}
       />
       
       <div 
         className="text-[2.5rem] font-bold tracking-tight"
-        style={{ textShadow: `0 0 40px ${c.glow}` }}
+        style={{ textShadow: `0 0 40px ${colorTheme.glow}` }}
       >
         {value}
       </div>
@@ -189,8 +189,8 @@ function InspectorCard() {
       <div className="mb-4">
         <p className="text-label mb-3" style={{ color: 'rgba(0,0,0,0.55)' }}>Permissions</p>
         <div className="flex flex-wrap gap-2">
-          {permissions.map((p) => (
-            <span key={p} className="chip chip-light">{p}</span>
+          {permissions.map((permission) => (
+            <span key={permission} className="chip chip-light">{permission}</span>
           ))}
         </div>
       </div>
@@ -198,10 +198,10 @@ function InspectorCard() {
       <div className="mb-4">
         <p className="text-label mb-3" style={{ color: 'rgba(0,0,0,0.55)' }}>Outputs</p>
         <div className="space-y-2">
-          {outputs.map((o) => (
-            <div key={o.name} className="output-row">
-              <span className="output-name">{o.name}</span>
-              <span className="output-tag">{o.tag}</span>
+          {outputs.map((output) => (
+            <div key={output.name} className="output-row">
+              <span className="output-name">{output.name}</span>
+              <span className="output-tag">{output.tag}</span>
             </div>
           ))}
         </div>
@@ -300,20 +300,20 @@ function ActivityCard() {
     <div className="glass-card h-full">
       <h2 className="text-title mb-4">Activity</h2>
       <div className="space-y-3">
-        {activities.map((a, i) => (
-          <div key={i} className="flex items-center gap-3">
+        {activities.map((activity, activityIndex) => (
+          <div key={activityIndex} className="flex items-center gap-3">
             <div 
               className="w-2 h-2 rounded-full"
               style={{ 
-                background: a.status === 'success' ? 'var(--accent-green)' : 'var(--accent-blue)',
-                boxShadow: a.status === 'success' 
+                background: activity.status === 'success' ? 'var(--accent-green)' : 'var(--accent-blue)',
+                boxShadow: activity.status === 'success' 
                   ? '0 0 8px rgba(34, 197, 94, 0.5)' 
                   : '0 0 8px rgba(59, 130, 246, 0.5)'
               }}
             />
             <div className="flex-1">
-              <p className="text-sm font-medium" style={{ color: 'var(--aaa-fg)' }}>{a.action}</p>
-              <p className="text-xs" style={{ color: 'var(--aaa-muted)' }}>{a.time}</p>
+              <p className="text-sm font-medium" style={{ color: 'var(--aaa-fg)' }}>{activity.action}</p>
+              <p className="text-xs" style={{ color: 'var(--aaa-muted)' }}>{activity.time}</p>
             </div>
           </div>
         ))}
@@ -334,15 +334,15 @@ function QuickActionsCard() {
     <div className="glass-card">
       <h2 className="text-title mb-4">Quick Actions</h2>
       <div className="grid grid-cols-2 gap-3">
-        {actions.map((a) => (
+        {actions.map((action) => (
           <motion.button
-            key={a.label}
+            key={action.label}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.98 }}
             className="btn-glass flex flex-col items-center gap-2 py-4"
           >
-            <span className="text-2xl">{a.icon}</span>
-            <span className="text-sm">{a.label}</span>
+            <span className="text-2xl">{action.icon}</span>
+            <span className="text-sm">{action.label}</span>
           </motion.button>
         ))}
       </div>
@@ -352,7 +352,7 @@ function QuickActionsCard() {
 
 function MemoryGraphCard() {
   // Fake graph bars
-  const bars = [40, 65, 80, 55, 90, 70, 85, 60, 75, 95, 50, 88];
+  const memoryUsageBars = [40, 65, 80, 55, 90, 70, 85, 60, 75, 95, 50, 88];
 
   return (
     <div className="glass-card">
@@ -369,12 +369,12 @@ function MemoryGraphCard() {
 
       {/* Graph */}
       <div className="flex items-end gap-2 h-32">
-        {bars.map((h, i) => (
+        {memoryUsageBars.map((barHeight, barIndex) => (
           <motion.div
-            key={i}
+            key={barIndex}
             initial={{ height: 0 }}
-            animate={{ height: `${h}%` }}
-            transition={{ delay: 0.6 + i * 0.05, duration: 0.5 }}
+            animate={{ height: `${barHeight}%` }}
+            transition={{ delay: 0.6 + barIndex * 0.05, duration: 0.5 }}
             className="flex-1 rounded-t-md"
             style={{
               background: `linear-gradient(180deg, rgba(6, 182, 212, 0.8), rgba(6, 182, 212, 0.3))`,

@@ -32,10 +32,10 @@ function KanbanCard({ item, onEdit, onMove }: KanbanCardProps) {
   };
 
   const completedTasks = item.checklists?.reduce(
-    (acc, cl) => acc + cl.items.filter(i => i.completed).length, 0
+    (acc, checklist) => acc + checklist.items.filter(checklistItem => checklistItem.completed).length, 0
   ) || 0;
   const totalTasks = item.checklists?.reduce(
-    (acc, cl) => acc + cl.items.length, 0
+    (acc, checklist) => acc + checklist.items.length, 0
   ) || 0;
 
   return (

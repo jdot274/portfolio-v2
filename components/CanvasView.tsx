@@ -33,12 +33,12 @@ function CanvasItem({ item, onPositionChange, scale }: CanvasItemProps) {
     const handleMouseMove = (e: MouseEvent) => {
       if (!isDragging || !dragRef.current) return;
       
-      const dx = (e.clientX - dragRef.current.startX) / scale;
-      const dy = (e.clientY - dragRef.current.startY) / scale;
+      const deltaX = (e.clientX - dragRef.current.startX) / scale;
+      const deltaY = (e.clientY - dragRef.current.startY) / scale;
       
       setPosition({
-        x: dragRef.current.startPosX + dx,
-        y: dragRef.current.startPosY + dy,
+        x: dragRef.current.startPosX + deltaX,
+        y: dragRef.current.startPosY + deltaY,
       });
     };
 
